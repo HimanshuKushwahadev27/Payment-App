@@ -1,0 +1,250 @@
+package com.emi.payment_service.serviceImpl;
+
+import java.time.Instant;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
+
+import com.emi.events.payment.PaymentStatus;
+import com.emi.payment_service.RequestDtos.GatewayPaymentRequest;
+import com.emi.payment_service.RequestDtos.GatewayPayoutRequest;
+import com.emi.payment_service.RequestDtos.RequestPaymentDto;
+import com.emi.payment_service.RequestDtos.RequestWithdrawDto;
+import com.emi.payment_service.ResponseDtos.GatewayResponse;
+import com.emi.payment_service.ResponseDtos.ResponsePaymentDto;
+import com.emi.payment_service.ResponseDtos.WithdrawResponseDto;
+import com.emi.payment_service.entity.IdempotencyRecord;
+import com.emi.payment_service.entity.Payments;
+import com.emi.payment_service.enums.IdempotencyStatus;
+import com.emi.payment_service.gatewayPayment.PaymentGateway;
+import com.emi.payment_service.kafka.PaymentEventGeneration;
+import com.emi.payment_service.mapper.EventMapper;
+import com.emi.payment_service.mapper.GatewayMapper;
+import com.emi.payment_service.mapper.IdempotencyMapper;
+import com.emi.payment_service.mapper.PaymentMapper;
+import com.emi.payment_service.repositories.IdempotencyRepo;
+import com.emi.payment_service.repositories.PaymentRepo;
+import com.emi.payment_service.service.PaymentService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.stripe.exception.SignatureVerificationException;
+import com.stripe.model.Event;
+import com.stripe.model.PaymentIntent;
+import com.stripe.model.Payout;
+import com.stripe.net.Webhook;
+
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class PaymentServiceImpl implements PaymentService {
+
+	@Value("${webhook.secret-Key}")
+	private String webhookSecret;
+	private final PaymentGateway paymentGateway;
+	private final ObjectMapper objectMapper;
+	private final IdempotencyRepo idempRepo;
+	private final PaymentRepo paymentRepo;
+	private final EventMapper eventMapper;
+	private final IdempotencyMapper idempMapper;
+	private final PaymentMapper paymentMapper;
+	private final GatewayMapper gatewayMapper;
+	private final PaymentEventGeneration eventGeneration;
+	
+	@Override
+	public ResponsePaymentDto charge(RequestPaymentDto request, UUID idempotencyKey, UUID keycloakId) {
+		IdempotencyRecord idempotency = idempMapper.getEntity(request, idempotencyKey, keycloakId);
+
+		try {
+			idempRepo.save(idempotency);
+		} catch (DataIntegrityViolationException ex) {
+			IdempotencyRecord existing = idempRepo.findByUserKeycloakIdAndIdempotencyKey(keycloakId, idempotencyKey)
+					.orElseThrow();
+
+			if (existing.getStatus() == IdempotencyStatus.COMPLETED) {
+				try {
+					return objectMapper.readValue(existing.getResponseBody(), ResponsePaymentDto.class);
+				} catch (JsonProcessingException e) {
+					throw new RuntimeException("Failed to deserialize JSON", e);
+				}
+			}
+			throw new IllegalStateException("Request already in progress");
+		}
+		
+		Payments payment = paymentMapper.toEntity(request, keycloakId);
+		paymentRepo.save(payment);
+
+		GatewayPaymentRequest gatewayRequest = gatewayMapper.getRequest(payment, idempotencyKey, request.paymentMethodId());
+		GatewayResponse gatewayResponse = paymentGateway.charge(gatewayRequest);
+		
+		payment.setGatewayTransactionId(gatewayResponse.transactionId());
+		ResponsePaymentDto response = paymentMapper.toDto(payment, gatewayResponse.client_secret());
+
+		idempMapper.updateIdemp(idempotency, response);
+		idempRepo.save(idempotency);
+		
+		return response;
+	}
+
+	@Override
+	public WithdrawResponseDto payout(RequestWithdrawDto request, UUID idempotencyKey, UUID keycloakId) {
+		IdempotencyRecord idempotency = idempMapper.getEntityWithdraw(request, idempotencyKey, keycloakId);
+
+		try {
+			idempRepo.save(idempotency);
+		} catch (DataIntegrityViolationException ex) {
+			IdempotencyRecord existing = idempRepo.findByUserKeycloakIdAndIdempotencyKey(keycloakId, idempotencyKey)
+					.orElseThrow();
+
+			if (existing.getStatus() == IdempotencyStatus.COMPLETED) {
+				try {
+					return objectMapper.readValue(existing.getResponseBody(), WithdrawResponseDto.class);
+				} catch (JsonProcessingException e) {
+					throw new RuntimeException("Failed to deserialize JSON", e);
+				}
+			}
+			throw new IllegalStateException("Request already in progress");
+		}
+		
+		Payments payment = paymentMapper.toEntityWithdraw(request, keycloakId);
+		paymentRepo.save(payment);	
+		
+		
+		GatewayPayoutRequest gatewayRequest = gatewayMapper.getRequestPayout(payment, idempotencyKey, request.destinationAccountId());
+		GatewayResponse gatewayResponse = paymentGateway.payout(gatewayRequest);
+		
+		payment.setGatewayTransactionId(gatewayResponse.transactionId());
+		WithdrawResponseDto response = paymentMapper.toDtoWithdraw(payment);
+
+		idempMapper.updateIdempWithdraw(idempotency, response);
+		idempRepo.save(idempotency);
+		
+		return response;
+	}
+
+	@Override
+	public ResponsePaymentDto cancelPayment(String transactionId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void handleWebhook(String payload, String sigHeader) {
+		Event event;
+
+		try {
+			event = Webhook.constructEvent(payload, sigHeader, webhookSecret);
+		} catch (SignatureVerificationException ex) {
+			throw new RuntimeException("Invalid Stripe Signature");
+		}
+
+		handleEvent(event);
+	}
+	
+	private void handleEvent(Event event) {
+
+		switch (event.getType()) {
+		case "payment_intent.succeeded" -> handleSuccess(event);
+
+		case "payment_intent.payment_failed" -> handleFailure(event);
+		
+        case "payout.paid" -> handlePayoutSuccess(event);
+
+        case "payout.failed" -> handlePayoutFailure(event);
+		}
+	}	
+
+	private void handlePayoutFailure(Event event) {
+	  Payout payout = (Payout) event.getDataObjectDeserializer()
+	            .getObject()
+	            .orElseThrow();
+
+	    String transactionId = payout.getId();
+
+	    Payments payment = paymentRepo
+	            .findByGatewayTransactionId(transactionId);
+
+	    if (payment.getStatus() == PaymentStatus.SUCCESS) {
+	        return;
+	    }
+
+	    payment.setStatus(PaymentStatus.SUCCESS);
+	    payment.setUpdatedAt(Instant.now());
+
+	    paymentRepo.save(payment);
+
+	    eventGeneration.paymentWithdrawSuccess(
+	            eventMapper.getEvents(payment)
+	    );
+	}
+
+	private void handlePayoutSuccess(Event event) {
+	    Payout payout = (Payout) event.getDataObjectDeserializer()
+	            .getObject()
+	            .orElseThrow();
+
+	    String transactionId = payout.getId();
+
+	    Payments payment = paymentRepo
+	            .findByGatewayTransactionId(transactionId);
+
+	    if (payment.getStatus() == PaymentStatus.SUCCESS ||
+	        payment.getStatus() == PaymentStatus.FAILED) {
+	        return;
+	    }
+
+	    payment.setStatus(PaymentStatus.FAILED);
+	    payment.setUpdatedAt(Instant.now());
+
+	    paymentRepo.save(payment);
+
+	    eventGeneration.paymentWithdrawFailed(
+	            eventMapper.getEvents(payment)
+	    );
+	}
+
+	@Transactional
+	private void handleFailure(Event event) {
+		
+		PaymentIntent intent = (PaymentIntent) event.getDataObjectDeserializer().getObject().orElseThrow();
+
+		String transactionId = intent.getId();
+
+		Payments payment = paymentRepo.findByGatewayTransactionId(transactionId);
+
+		if (payment.getStatus() == PaymentStatus.SUCCESS ||
+				payment.getStatus() == PaymentStatus.FAILED) {
+			return;
+		}
+		
+		payment.setStatus(PaymentStatus.FAILED);
+		payment.setUpdatedAt(Instant.now());
+		paymentRepo.save(payment);
+		
+		eventGeneration.paymentFailed(eventMapper.getEvents(payment));
+	}
+
+	@Transactional
+	private void handleSuccess(Event event) {
+		PaymentIntent intent = (PaymentIntent) event.getDataObjectDeserializer().getObject().orElseThrow();
+
+		String transactionId = intent.getId();
+
+		Payments payment = paymentRepo.findByGatewayTransactionId(transactionId);
+
+		if (payment.getStatus() == PaymentStatus.SUCCESS) {
+			return;
+		}
+
+		payment.setStatus(PaymentStatus.SUCCESS);
+		payment.setUpdatedAt(Instant.now());
+		paymentRepo.save(payment);
+
+		eventGeneration.paymentSuccess(eventMapper.getEvents(payment));;
+
+	}
+
+}
