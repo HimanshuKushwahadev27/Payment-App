@@ -1,0 +1,54 @@
+{
+  "type": "record",
+  "name": "PaymentEvent",
+  "namespace": "com.emi.events.payment",
+  "fields": [
+
+    { "name": "eventId", "type": "string" },
+
+    { "name": "paymentId", "type": "string" },
+
+    { "name": "userKeycloakId", "type": "string" },
+
+    { "name": "currency", "type": "string" },
+
+    {
+      "name": "amount",
+      "type": "long",
+      "doc": "Amount in smallest currency unit"
+    },
+
+    {
+      "name": "paymentType",
+      "type": {
+        "type": "enum",
+        "name": "PaymentType",
+        "symbols": ["DEPOSIT", "TRANSFER", "WITHDRAW"]
+      }
+    },
+
+    {
+      "name": "paymentStatus",
+      "type": {
+        "type": "enum",
+        "name": "PaymentStatus",
+        "symbols": ["INITIATED", "SUCCESS", "FAILED", "REFUNDED"]
+      }
+    },
+    
+    {
+      "name": "paymentMethod",
+      "type": {
+        "type": "enum",
+        "name": "PaymentMethodType",
+        "symbols": ["CARD", "UPI", "NET_BANKING", "WALLET"]
+      }
+    },
+
+    {
+      "name": "createdAt",
+      "type": "long"
+    }
+
+  ]
+}
