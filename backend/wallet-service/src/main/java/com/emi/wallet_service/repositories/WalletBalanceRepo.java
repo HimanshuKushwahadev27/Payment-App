@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.emi.wallet_service.entity.WalletBalance;
 
-public interface WalletRepo extends JpaRepository<WalletBalance, UUID> {
+public interface WalletBalanceRepo extends JpaRepository<WalletBalance, UUID> {
 
 }

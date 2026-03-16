@@ -8,11 +8,11 @@ import com.emi.wallet_service.ResponseDto.ResponseAccountDto;
 
 public interface WalletService {
 
-	public ResponseAccountDto createAccount(CreateAccountDto request);
+	public ResponseAccountDto createAccount(CreateAccountDto request, UUID idempotencyKey, UUID keycloakId);
 	
-	public void credit();
+	public void charge();
 	
-	public void debit();
+	public void payout();
 	
 	public void transfer();
 	

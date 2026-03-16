@@ -35,8 +35,8 @@ import lombok.NoArgsConstructor;
 		@GeneratedValue(strategy = GenerationType.UUID)
 		private UUID id ;
 		
-	    @Column(name = "user_id", nullable = false)
-	    private UUID userId;
+	    @Column(name = "user_keycloak_id", nullable = false)
+	    private UUID userKeycloakId;
 	    
 	    @Enumerated(EnumType.STRING)
 	    @Column(name = "account_type", nullable = false)
