@@ -1,0 +1,42 @@
+{
+  "type": "record",
+  "name": "TransactionEvent",
+  "namespace": "com.emi.events.transactions",
+  "fields": [
+
+    { "name": "eventId", "type": "string" },
+
+    { "name": "transactionId", "type": "string" },
+
+    { "name": "currency", "type": "string" },
+
+    { "name": "toAccountId", "type": "string" },
+    
+    { "name": "userKeycloakId", "type": "string" },
+
+    {
+      "name": "amount",
+      "type": "long",
+      "doc": "Amount in smallest currency unit"
+    },
+
+    {
+      "name": "transactionType",
+      "type": {
+        "type": "enum",
+        "name": "TransactionType",
+        "symbols": ["DEPOSIT", "TRANSFER", "WITHDRAW"]
+      }
+    },
+
+    {
+      "name": "transactionStatus",
+      "type": {
+        "type": "enum",
+        "name": "TransactionStatus",
+        "symbols": ["INITIATED", "SUCCESS", "FAILED"]
+      }
+    }
+
+  ]
+}
