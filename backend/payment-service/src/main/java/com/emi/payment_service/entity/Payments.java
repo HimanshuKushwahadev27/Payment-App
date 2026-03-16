@@ -36,6 +36,12 @@ public class Payments {
 	@Column(name = "gateway_transaction_id", nullable = false, unique = false)
 	private String gatewayTransactionId;
 	
+	@Column(name = "payout_transaction_id", nullable = true, unique = false)
+	private UUID payoutTransactionId;
+	
+	@Column(name = "to_account_id", nullable = true, unique = false)
+	private String toAccountId;
+	
 	@Column(name = "amount", nullable = false, unique = false)
 	private BigDecimal amount;
 	

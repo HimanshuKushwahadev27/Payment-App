@@ -14,7 +14,6 @@ import com.emi.payment_service.RequestDtos.RequestPaymentDto;
 import com.emi.payment_service.RequestDtos.RequestWithdrawDto;
 import com.emi.payment_service.ResponseDtos.GatewayResponse;
 import com.emi.payment_service.ResponseDtos.ResponsePaymentDto;
-import com.emi.payment_service.ResponseDtos.WithdrawResponseDto;
 import com.emi.payment_service.entity.IdempotencyRecord;
 import com.emi.payment_service.entity.Payments;
 import com.emi.payment_service.enums.IdempotencyStatus;
@@ -90,24 +89,7 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 
 	@Override
-	public WithdrawResponseDto payout(RequestWithdrawDto request, UUID idempotencyKey, UUID keycloakId) {
-		IdempotencyRecord idempotency = idempMapper.getEntityWithdraw(request, idempotencyKey, keycloakId);
-
-		try {
-			idempRepo.save(idempotency);
-		} catch (DataIntegrityViolationException ex) {
-			IdempotencyRecord existing = idempRepo.findByUserKeycloakIdAndIdempotencyKey(keycloakId, idempotencyKey)
-					.orElseThrow();
-
-			if (existing.getStatus() == IdempotencyStatus.COMPLETED) {
-				try {
-					return objectMapper.readValue(existing.getResponseBody(), WithdrawResponseDto.class);
-				} catch (JsonProcessingException e) {
-					throw new RuntimeException("Failed to deserialize JSON", e);
-				}
-			}
-			throw new IllegalStateException("Request already in progress");
-		}
+	public void payout(RequestWithdrawDto request, UUID idempotencyKey, UUID keycloakId) {
 		
 		Payments payment = paymentMapper.toEntityWithdraw(request, keycloakId);
 		paymentRepo.save(payment);	
@@ -117,12 +99,8 @@ public class PaymentServiceImpl implements PaymentService {
 		GatewayResponse gatewayResponse = paymentGateway.payout(gatewayRequest);
 		
 		payment.setGatewayTransactionId(gatewayResponse.transactionId());
-		WithdrawResponseDto response = paymentMapper.toDtoWithdraw(payment);
 
-		idempMapper.updateIdempWithdraw(idempotency, response);
-		idempRepo.save(idempotency);
-		
-		return response;
+	
 	}
 
 	@Override
@@ -177,7 +155,7 @@ public class PaymentServiceImpl implements PaymentService {
 	    paymentRepo.save(payment);
 
 	    eventGeneration.paymentWithdrawSuccess(
-	            eventMapper.getEvents(payment)
+	            eventMapper.getEventPayoutSuccess(payment)
 	    );
 	}
 
@@ -202,7 +180,7 @@ public class PaymentServiceImpl implements PaymentService {
 	    paymentRepo.save(payment);
 
 	    eventGeneration.paymentWithdrawFailed(
-	            eventMapper.getEvents(payment)
+	            eventMapper.getEventPayoutFailure(payment)
 	    );
 	}
 
