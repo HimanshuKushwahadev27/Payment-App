@@ -8,4 +8,6 @@ import com.emi.wallet_service.entity.WalletBalance;
 
 public interface WalletBalanceRepo extends JpaRepository<WalletBalance, UUID> {
 
+	WalletBalance findByAccountId(UUID accountId);
+
 }

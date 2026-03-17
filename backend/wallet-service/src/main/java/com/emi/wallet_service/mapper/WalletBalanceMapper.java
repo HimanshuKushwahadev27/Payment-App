@@ -5,6 +5,7 @@ import java.time.Instant;
 
 import org.springframework.stereotype.Component;
 
+import com.emi.wallet_service.ResponseDto.ReponseBalanceDto;
 import com.emi.wallet_service.entity.Account;
 import com.emi.wallet_service.entity.WalletBalance;
 
@@ -20,6 +21,14 @@ public class WalletBalanceMapper {
 		balance.setCreatedAt(Instant.now());
 		balance.setUpdatedAt(Instant.now());
 		return balance ;
+	}
+	
+	public ReponseBalanceDto toDto(WalletBalance balance) {
+		return new ReponseBalanceDto(
+				balance.getBalance(),
+				balance.getUpdatedAt()
+				);
+		
 	}
 
 }

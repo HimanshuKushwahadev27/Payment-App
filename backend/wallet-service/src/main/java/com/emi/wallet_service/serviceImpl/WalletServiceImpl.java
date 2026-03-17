@@ -5,18 +5,20 @@ import java.util.UUID;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-
+import com.emi.events.payment.PaymentEvent;
+import com.emi.events.transactions.TransactionEvent;
 import com.emi.wallet_service.RequestDtos.CreateAccountDto;
+import com.emi.wallet_service.RequestDtos.TransferRequestDto;
 import com.emi.wallet_service.ResponseDto.ReponseBalanceDto;
 import com.emi.wallet_service.ResponseDto.ResponseAccountDto;
 import com.emi.wallet_service.entity.Account;
 import com.emi.wallet_service.entity.IdempotencyKeys;
-import com.emi.wallet_service.entity.LedgerEntry;
 import com.emi.wallet_service.entity.WalletBalance;
 import com.emi.wallet_service.enums.IdempotencyStatus;
+import com.emi.wallet_service.exception.AccountNotExistsException;
+import com.emi.wallet_service.exception.UnauthorizedException;
 import com.emi.wallet_service.mapper.AccountMapper;
 import com.emi.wallet_service.mapper.IdempotencyMapper;
-import com.emi.wallet_service.mapper.LedgerMapper;
 import com.emi.wallet_service.mapper.WalletBalanceMapper;
 import com.emi.wallet_service.repositories.AccountRepo;
 import com.emi.wallet_service.repositories.IdempotencyRepo;
@@ -38,7 +40,7 @@ public class WalletServiceImpl implements WalletService{
 	private final WalletBalanceMapper balanceMapper;
 	private final AccountRepo accountRepo;
 	private final WalletBalanceRepo balanceRepo;
-	private final LedgerMapper ledgerMapper;
+	
 	@Override
 	public ResponseAccountDto createAccount(CreateAccountDto request, UUID idempotencyKey, UUID userKeycloakId) {
 		
@@ -73,27 +75,35 @@ public class WalletServiceImpl implements WalletService{
 	}
 
 	@Override
-	public void charge() {
+	public void charge(PaymentEvent event) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void payout() {
+	public void payout(TransactionEvent event) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void transfer() {
+	public void transfer(TransferRequestDto request) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public ReponseBalanceDto getBalance(UUID accountId) {
-		// TODO Auto-generated method stub
-		return null;
+	public ReponseBalanceDto getBalance(UUID accountId, UUID userKeycloakId) {
+		Account account = accountRepo.findById(accountId).orElseThrow(() -> new AccountNotExistsException("Not found the account"));
+		
+		if(!account.getUserKeycloakId().equals(userKeycloakId)) {
+			throw new UnauthorizedException("Not ur wallet");
+		}
+		
+		WalletBalance balance = balanceRepo.findByAccountId(accountId);
+		
+		return balanceMapper.toDto(balance);
+		
 	}
 
 
