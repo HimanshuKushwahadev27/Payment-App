@@ -11,9 +11,10 @@ import com.emi.transaction_service.responseDtos.TransactionResponseDto;
 public interface TransactionService {
 
 	public TransactionResponseDto payout(TransactionPayoutRequestDto request, UUID IdempotencyKey, UUID userKeycloakId);
+	
 	public List<TransactionResponseDto> getAll(UUID userKeycloakId);
 	
-    public TransactionResponseDto get(UUID transactionId);
+    public TransactionResponseDto get(UUID keycloakId, UUID transactionId);
     
 	
 	public void payoutEventSuccess(TransactionEvent event);

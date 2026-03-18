@@ -60,7 +60,7 @@ public class TransactionMapper {
 		transaction.setCurrency((String)event.getCurrency());
 		transaction.setStatus(TransactionStatus.SUCCESS);
 		transaction.setType(TransactionType.DEPOSIT);
-		
+		transaction.setToAccountId("");
 		return transaction;
 	}
 
@@ -72,6 +72,7 @@ public class TransactionMapper {
 		transaction.setAmount(BigDecimal.valueOf(event.getAmount()));
 		transaction.setUpdatedAt(Instant.now());
 		transaction.setCreatedAt(Instant.now());
+		transaction.setToAccountId("");
 		transaction.setCurrency((String)event.getCurrency());
 		transaction.setStatus(TransactionStatus.FAILED);
 		transaction.setType(TransactionType.DEPOSIT);

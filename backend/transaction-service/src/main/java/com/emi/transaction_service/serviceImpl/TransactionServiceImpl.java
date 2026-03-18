@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-import org.flywaydb.core.api.callback.Event;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +13,7 @@ import com.emi.transaction_service.entity.IdempotencyRecord;
 import com.emi.transaction_service.entity.Transaction;
 import com.emi.transaction_service.enums.IdempotencyStatus;
 import com.emi.transaction_service.exception.TransactionNotFoundException;
+import com.emi.transaction_service.exception.UnauthorizedException;
 import com.emi.transaction_service.kafka.EventGeneration;
 import com.emi.transaction_service.mapper.EventMapper;
 import com.emi.transaction_service.mapper.IdempotencyMapper;
@@ -81,13 +81,15 @@ public class TransactionServiceImpl implements TransactionService{
 	}
 
 	@Override
-	public TransactionResponseDto get(UUID transactionId) {
+	public TransactionResponseDto get(UUID transactionId, UUID keycloakId) {
 		Transaction transaction  = transactionRepo
 				.findById(transactionId)
 				.orElseThrow(
 						() -> new TransactionNotFoundException("not availabe transaction looking for")
 						);
-		
+		if(!transaction.getUserKeycloakId().equals(keycloakId)) {
+			throw new UnauthorizedException("you're not authorized");
+		}
 		return transactionMapper.toDto(transaction);
 	}
 
@@ -115,13 +117,18 @@ public class TransactionServiceImpl implements TransactionService{
 						);
 		
 	    transaction.setStatus(event.getTransactionStatus());
-	    transaction.setUpdatedAt(Instant.now());	
+	    transaction.setUpdatedAt(Instant.now());
+	    
+	    eventGeneration.eventUpdateLedgerPayoutFailure(event);
 	}
 
 	@Override
 	public void paymentEventFailure(PaymentEvent event) {
 		Transaction transaction =  transactionMapper.toEntityDepositFailure(event);
-		transactionRepo.save(transaction);	
+		transactionRepo.save(transaction);
+		TransactionEvent depositEvent = eventMapper.toEntity(transaction);
+
+		eventGeneration.eventUpdateLedgerDepositFailure(depositEvent);
 	}
 
 	@Override

@@ -14,6 +14,8 @@ public class EventGeneration {
 	private final KafkaTemplate<String, TransactionEvent> kafkaPayoutGeneration;
 	private final KafkaTemplate<String, TransactionEvent> kafkaLedgerPayout;
 	private final KafkaTemplate<String, TransactionEvent> kafkaLedgerDeposit;
+	private final KafkaTemplate<String, TransactionEvent> kafkaLedgerPayoutFailure;
+	private final KafkaTemplate<String, TransactionEvent> kafkaLedgerDepositFailure;
 
 
 	public void eventPayout(TransactionEvent event) {
@@ -28,6 +30,15 @@ public class EventGeneration {
 
 	public void eventUpdateLedgerDeposit(TransactionEvent depositEvent) {
 		kafkaLedgerDeposit.send("Deposit-ledger-update", depositEvent)	;	
+	}
+	
+	public void eventUpdateLedgerPayoutFailure(TransactionEvent event) {
+		kafkaLedgerPayoutFailure.send("Payout-ledger-update-failure", event);
+	}
+
+
+	public void eventUpdateLedgerDepositFailure(TransactionEvent depositEvent) {
+		kafkaLedgerDepositFailure.send("Deposit-ledger-update-failure", depositEvent)	;	
 	}
 
 }
