@@ -37,6 +37,17 @@ public class ConsumeEvents{
 		ledgerService.updateLedgerDeposit(depositEvent);
 		
 	}
+	
+	@KafkaListener(topics="Payout-ledger-update-failure")
+	public void eventUpdateLedgerPayoutFailure(TransactionEvent event) {
+		ledgerService.updateLedgerPayoutFailure(event);
+	}
+
+	@KafkaListener(topics="Deposit-ledger-update-failure")
+	public void eventUpdateLedgerDepositFailure(TransactionEvent depositEvent) {
+		ledgerService.updateLedgerDepositFailure(depositEvent);
+		
+	}
 
 	
 	

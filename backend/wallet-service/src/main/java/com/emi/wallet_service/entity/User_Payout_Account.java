@@ -14,7 +14,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Table(name = "user_payout_accounts")
+@Table(name = "user_payout_account")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

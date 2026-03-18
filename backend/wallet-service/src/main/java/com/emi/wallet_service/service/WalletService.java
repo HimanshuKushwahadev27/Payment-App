@@ -17,7 +17,7 @@ public interface WalletService {
 	
 	public void payout(TransactionEvent event);
 	
-	public void transfer(TransferRequestDto request);
+	public void transfer(TransferRequestDto request, UUID keycloakId);
 	 
 	public ReponseBalanceDto getBalance(UUID accountId, UUID keycloakId);
 }

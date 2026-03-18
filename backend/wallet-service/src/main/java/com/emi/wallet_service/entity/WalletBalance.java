@@ -30,4 +30,7 @@ public class WalletBalance {
     
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
+    
+    
+    
 }

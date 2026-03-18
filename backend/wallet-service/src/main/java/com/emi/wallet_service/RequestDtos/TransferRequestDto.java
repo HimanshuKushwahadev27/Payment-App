@@ -1,11 +1,12 @@
 package com.emi.wallet_service.RequestDtos;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public record TransferRequestDto(
 		
-		String toAccountId,
-		String fromAccountId,
+		UUID toAccountId,
+		UUID fromAccountId,
 		BigDecimal amount 
 
 		) {

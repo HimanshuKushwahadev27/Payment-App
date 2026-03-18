@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
+import com.emi.events.payment.PaymentStatus;
 import com.emi.wallet_service.enums.EntryType;
 
 import jakarta.persistence.Column;
@@ -30,8 +31,11 @@ public class LedgerEntry {
     @Column(name = "transaction_id", nullable = false)
     private UUID transactionId;
 
-    @Column(name = "account_id", nullable = false)
-    private UUID accountId;
+    @Column(name = "to_account_id", nullable = false)
+    private String toAccountId;
+    
+    @Column(name = "from_account_id", nullable = false)
+    private String fromAccountId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "entry_type", nullable = false)
@@ -42,4 +46,9 @@ public class LedgerEntry {
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
+    
+    
+	@Column(name = "status", nullable = false, unique = false)
+	@Enumerated(EnumType.STRING)
+    private PaymentStatus status;
 }
