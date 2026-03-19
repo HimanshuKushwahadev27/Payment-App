@@ -1,0 +1,118 @@
+{
+  "type": "record",
+  "name": "NotificationEvent",
+  "namespace": "com.emi.events.notification",
+
+  "fields": [
+
+    {
+      "name": "eventId",
+      "type": "string"
+    },
+
+    {
+      "name": "eventType",
+      "type": {
+        "type": "enum",
+        "name": "EventType",
+        "symbols": [
+          "TRANSACTION_SUCCESS",
+          "TRANSACTION_FAILED"
+        ]
+      }
+    },
+
+    {
+      "name": "userId",
+      "type": "string"
+    },
+
+    {
+      "name": "channel",
+      "type": {
+        "type": "enum",
+        "name": "NotificationChannel",
+        "symbols": [
+          "EMAIL",
+          "SMS",
+          "PUSH"
+        ]
+      }
+    },
+
+    {
+      "name": "data",
+      "type": {
+        "type": "record",
+        "name": "NotificationData",
+        "fields": [
+
+          {
+            "name": "transactionId",
+            "type": "string"
+          },
+
+          {
+            "name": "amount",
+            "type": "long"
+          },
+
+          {
+            "name": "currency",
+            "type": "string"
+          },
+
+          {
+            "name": "transactionType",
+            "type": {
+              "type": "enum",
+              "name": "TransactionType",
+              "symbols": [
+                "DEPOSIT",
+                "WITHDRAW",
+                "TRANSFER"
+              ]
+            }
+          },
+
+          {
+            "name": "status",
+            "type": {
+              "type": "enum",
+              "name": "TransactionStatus",
+              "symbols": [
+                "SUCCESS",
+                "FAILED"
+              ]
+            }
+          },
+
+          {
+            "name": "timestamp",
+            "type": "long"
+          },
+
+          {
+            "name": "fromAccountId",
+            "type": ["null", "string"],
+            "default": null
+          },
+
+          {
+            "name": "toAccountId",
+            "type": ["null", "string"],
+            "default": null
+          },
+
+          {
+            "name": "message",
+            "type": ["null", "string"],
+            "default": null
+          }
+
+        ]
+      }
+    }
+
+  ]
+}
