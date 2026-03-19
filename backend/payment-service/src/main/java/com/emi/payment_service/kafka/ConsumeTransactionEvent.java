@@ -19,7 +19,7 @@ public class ConsumeTransactionEvent {
 	private final PaymentService paymentService;
 	private final PaymentMapper paymentMapper;
 	
-	@KafkaListener(topics ="Payout-generation-event" ,groupId="paymentService")
+	@KafkaListener(topics ="Payout-generation-event" ,groupId="PaymentService")
 	public void callPayout(TransactionEvent event) {
 		
 		RequestWithdrawDto request = paymentMapper.toRequestWithdraw(event);
