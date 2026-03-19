@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import com.emi.events.notification.NotificationEvent;
 import com.emi.events.payment.PaymentEvent;
 import com.emi.events.transactions.TransactionEvent;
 import com.emi.transaction_service.entity.IdempotencyRecord;
@@ -106,6 +107,8 @@ public class TransactionServiceImpl implements TransactionService{
 	    transaction.setUpdatedAt(Instant.now());
 	    
 	    eventGeneration.eventUpdateLedgerPayout(event);
+		NotificationEvent notification = eventMapper.getSuccessWithdraw(transaction,event);
+		eventGeneration.eventPayoutSuccessNotification(notification);
 	}
 
 	@Override
@@ -120,6 +123,8 @@ public class TransactionServiceImpl implements TransactionService{
 	    transaction.setUpdatedAt(Instant.now());
 	    
 	    eventGeneration.eventUpdateLedgerPayoutFailure(event);
+		NotificationEvent notification = eventMapper.getFailureWithdraw(transaction,event);
+		eventGeneration.eventPayoutFailureNotification(notification);
 	}
 
 	@Override
@@ -129,6 +134,8 @@ public class TransactionServiceImpl implements TransactionService{
 		TransactionEvent depositEvent = eventMapper.toEntity(transaction);
 
 		eventGeneration.eventUpdateLedgerDepositFailure(depositEvent);
+		NotificationEvent notification = eventMapper.getFailurePayment(transaction,event);
+		eventGeneration.eventPayoutFailureNotification(notification);
 	}
 
 	@Override
@@ -139,5 +146,7 @@ public class TransactionServiceImpl implements TransactionService{
 		
 		TransactionEvent depositEvent = eventMapper.toEntity(transaction);
 		eventGeneration.eventUpdateLedgerDeposit(depositEvent);
+		NotificationEvent notification = eventMapper.getSuccessPayment(transaction,event);
+		eventGeneration.eventDepositSuccessNotification(notification);		
 	}
 }

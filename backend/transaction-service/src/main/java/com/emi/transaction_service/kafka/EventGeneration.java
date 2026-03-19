@@ -1,8 +1,10 @@
+
 package com.emi.transaction_service.kafka;
 
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
+import com.emi.events.notification.NotificationEvent;
 import com.emi.events.transactions.TransactionEvent;
 
 import lombok.RequiredArgsConstructor;
@@ -16,7 +18,10 @@ public class EventGeneration {
 	private final KafkaTemplate<String, TransactionEvent> kafkaLedgerDeposit;
 	private final KafkaTemplate<String, TransactionEvent> kafkaLedgerPayoutFailure;
 	private final KafkaTemplate<String, TransactionEvent> kafkaLedgerDepositFailure;
-
+	private final KafkaTemplate<String , NotificationEvent> kafkaPayoutSuccess;
+	private final KafkaTemplate<String , NotificationEvent> kafkaPayoutFailure;
+	private final KafkaTemplate<String , NotificationEvent> kafkaDepositSuccess;
+	private final KafkaTemplate<String , NotificationEvent> kafkaDepositFailure;
 
 	public void eventPayout(TransactionEvent event) {
 		kafkaPayoutGeneration.send("Payout-generation-event" , event)	;	
@@ -40,5 +45,23 @@ public class EventGeneration {
 	public void eventUpdateLedgerDepositFailure(TransactionEvent depositEvent) {
 		kafkaLedgerDepositFailure.send("Deposit-ledger-update-failure", depositEvent)	;	
 	}
+
+	public void eventPayoutSuccessNotification(NotificationEvent event) {
+		kafkaPayoutSuccess.send("transaction-topics", event);
+	}
+	
+	public void eventPayoutFailureNotification(NotificationEvent event) {
+		kafkaPayoutFailure.send("transaction-topics", event);
+	}
+	
+	public void eventDepositSuccessNotification(NotificationEvent event) {
+		kafkaDepositSuccess.send("transaction-topics", event);
+	}
+	
+	public void eventDepositFailureNotification(NotificationEvent event) {
+		kafkaDepositFailure.send("transaction-topics", event);
+	}
+	
+
 
 }
