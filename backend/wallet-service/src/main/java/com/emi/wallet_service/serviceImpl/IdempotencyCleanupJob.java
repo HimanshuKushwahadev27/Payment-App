@@ -6,6 +6,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.emi.wallet_service.repositories.IdempotencyRepo;
+import com.emi.wallet_service.repositories.ProcessedEventRepo;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class IdempotencyCleanupJob {
 
 	
 		private final IdempotencyRepo idempRepo;
-		
+		private final ProcessedEventRepo eventRepo;
 		@Transactional
 		@Scheduled(fixedRate = 60*60*100)
 		public void cleanUp() {
@@ -26,4 +27,14 @@ public class IdempotencyCleanupJob {
 			
 			log.info("idempotency cleaned");
 		}
+		
+		@Transactional
+		@Scheduled(fixedRate = 60*60*100)
+		public void cleanUpProcessed() {
+			eventRepo.deleteExpired(Instant.now());
+			
+			log.info("Processed event  cleaned");
+		}
+		
+		
 }
