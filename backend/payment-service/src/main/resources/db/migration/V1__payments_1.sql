@@ -14,7 +14,7 @@ CREATE TABLE payments (
 
     status VARCHAR(20) NOT NULL,
 
-    payment_type VARCHAR(20)
+    payment_type VARCHAR(20),
     
     created_at TIMESTAMP NOT NULL,
 

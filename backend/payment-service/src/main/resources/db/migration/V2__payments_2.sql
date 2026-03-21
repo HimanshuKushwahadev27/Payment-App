@@ -13,10 +13,10 @@ CREATE TABLE idempotency_records (
 
 
 CREATE UNIQUE INDEX idx_idempotency_key 
-ON idempotency_keys(idempotency_key);
+ON idempotency_records(idempotency_key);
 
 CREATE INDEX idx_idempotency_user 
-ON idempotency_keys(user_keycloak_id);
+ON idempotency_records(user_keycloak_id);
 
 CREATE INDEX idx_idempotency_expires 
-ON idempotency_keys(expires_at);
+ON idempotency_records(expires_at);

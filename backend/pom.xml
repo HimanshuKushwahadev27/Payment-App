@@ -18,6 +18,7 @@
     	<module>user-service</module>
     	<module>notification-service</module>
     	<module>api-gateway</module>
+    	<module>transaction-service</module>
     </modules>
 
     <properties>

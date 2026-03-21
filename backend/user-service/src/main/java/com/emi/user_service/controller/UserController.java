@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,7 +43,7 @@ public class UserController {
 				);
 	}
 	
-	@GetMapping("/get")
+	@GetMapping("/")
 	public ResponseEntity<UserResponseDto> getUser(@AuthenticationPrincipal Jwt jwt){
 		
 		return ResponseEntity.ok(userService.getUser(UUID.fromString(jwt.getSubject())));
@@ -71,6 +72,12 @@ public class UserController {
 						UUID.fromString(jwt.getSubject())		
 						)
 				); 
+	}
+	
+	
+	@GetMapping("/users/{id}/email")
+	public String getEmail(@PathVariable UUID id) {
+	    return userService.getEmail(id);
 	}
 }
 

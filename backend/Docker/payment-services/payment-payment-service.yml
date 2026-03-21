@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  payment-service:
+    build:
+      context: ../..
+      dockerfile: payment-service/Dockerfile
+    container_name: payment-payment-service
+    restart: on-failure
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/paymentservice_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:8080/realms/Payment-realm/protocol/openid-connect/certs
+
+    ports:
+      - "8088:8080"
+    networks:
+      - Payment-net
+
+networks:
+  Payment-net:
+    external: true

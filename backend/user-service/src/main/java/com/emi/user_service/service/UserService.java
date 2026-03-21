@@ -15,4 +15,5 @@ public interface UserService {
 	public List<UserResponseDto> getAllUser();
 	public void deleteUser(UUID keycloakId);
 	public UserResponseDto updateUser(UserRequestUpdateDto request, String email, UUID keycloakId);
+	public String getEmail(UUID userId);
 }

@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
-
+import org.keycloak.admin.client.Keycloak;
+import org.keycloak.representations.idm.UserRepresentation;
 import com.emi.user_service.DTOs.UserRequestCreateDto;
 import com.emi.user_service.DTOs.UserRequestUpdateDto;
 import com.emi.user_service.DTOs.UserResponseDto;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+	private final Keycloak keycloak;
 	private final UserMapper userMapper;
 	private final UserRepo userRepo;
 	
@@ -82,5 +84,15 @@ public class UserServiceImpl implements UserService {
 		userRepo.save(user);
 		return userMapper.toDto(user);
 	}
+
+	@Override
+	public String getEmail(UUID userId) {
+		UserRepresentation user= keycloak.realm("wallet-realm")
+				.users()
+				.get(userId.toString())
+				.toRepresentation();
+		
+		return user.getEmail();
+	}	
 
 }
