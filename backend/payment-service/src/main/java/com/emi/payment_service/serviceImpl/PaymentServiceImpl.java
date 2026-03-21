@@ -41,7 +41,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
 
-	@Value("${webhook.secret-Key}")
+	@Value("${webhook-secret-Key}")
 	private String webhookSecret;
 	private final PaymentGateway paymentGateway;
 	private final ObjectMapper objectMapper;

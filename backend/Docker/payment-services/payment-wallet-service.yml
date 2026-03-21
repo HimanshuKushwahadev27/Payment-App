@@ -12,12 +12,9 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:8080/realms/Payment-realm/protocol/openid-connect/certs
-
+      SYSTEM_ACC_ID: 123456789
     ports:
       - "8082:8080"
-    depends_on:
-      postgres:
-        condition: service_healthy
     networks:
       - Payment-net
 

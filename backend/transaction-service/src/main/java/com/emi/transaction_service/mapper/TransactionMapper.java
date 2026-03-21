@@ -17,7 +17,7 @@ import com.emi.transaction_service.responseDtos.TransactionResponseDto;
 @Component
 public class TransactionMapper {
 
-	@Value("${System.acc.id}")
+	@Value("${system.acc.id}")
 	private String  SYSTEM_ACC_ID;
 	
 	

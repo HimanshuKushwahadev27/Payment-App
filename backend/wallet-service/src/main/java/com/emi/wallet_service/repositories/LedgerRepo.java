@@ -9,6 +9,7 @@ import com.emi.wallet_service.entity.LedgerEntry;
 
 public interface LedgerRepo extends JpaRepository<LedgerEntry, UUID> {
 
-	Optional<LedgerEntry> findByTransactionId();
+	Optional<LedgerEntry> findByTransactionId(UUID transaction_Id);
+
 
 }

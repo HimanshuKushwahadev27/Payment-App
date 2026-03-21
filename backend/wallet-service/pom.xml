@@ -97,12 +97,6 @@
         <artifactId>common-modules</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </dependency>
-
-    <dependency>
-    	<groupId>com.emi</groupId>
-    	<artifactId>api-gateway</artifactId>
-    	<version>0.0.1-SNAPSHOT</version>
-    </dependency>
 </dependencies>
 
 

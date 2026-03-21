@@ -12,7 +12,8 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:8080/realms/Payment-realm/protocol/openid-connect/certs
-
+      WEBHOOK_SECRET_KEY: ${webhook-secret-key}
+      STRIPE_SECRET_KEY: ${stripe-secret-key}
     ports:
       - "8088:8080"
     networks:

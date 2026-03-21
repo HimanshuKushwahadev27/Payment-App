@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.emi.transaction_service.entity.IdempotencyRecord;
 
@@ -14,7 +15,7 @@ public interface IdempotencyRepository extends JpaRepository<IdempotencyRecord, 
 
 	 @Modifying
 	 @Query("DELETE FROM IdempotencyRecord i WHERE i.expiresAt < :now")
-	 void deleteExpired(Instant now);
+	 void deleteExpired(@Param("now") Instant now);
 
 	 Optional<IdempotencyRecord> findByUserKeycloakIdAndIdempotencyKey(UUID keycloakId, UUID idempotencyKey);
 

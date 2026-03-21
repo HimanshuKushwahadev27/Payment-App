@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import com.emi.events.payment.PaymentStatus;
 import com.emi.events.transactions.TransactionEvent;
@@ -14,9 +15,10 @@ import com.emi.wallet_service.entity.Account;
 import com.emi.wallet_service.entity.LedgerEntry;
 import com.emi.wallet_service.enums.EntryType;
 
+@Component
 public class LedgerMapper {
 
-	@Value("${System.acc.id}")
+	@Value("${system.acc.id}")
 	private String  SYSTEM_ACC_ID;
 
 	public LedgerEntry toEntityPayout(TransactionEvent event, Account account) {

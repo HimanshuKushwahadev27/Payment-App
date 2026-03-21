@@ -82,7 +82,7 @@ public class LedgerServiceImpl implements LedgerService {
 	@Override
 	public LedgerResponseDto getUsersRecord(UUID transaction_Id) {
 		LedgerEntry event = ledgerRepo
-				.findByTransactionId()
+				.findByTransactionId(transaction_Id)
 				.orElseThrow(() -> new LedgerNotFoundException("ledger not exists for the given transaction"));
 	
 		return ledgerMapper.toDto(event);
