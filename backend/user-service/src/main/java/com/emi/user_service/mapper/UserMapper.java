@@ -24,12 +24,15 @@ public class UserMapper {
 		user.setName(request.name());
 		user.setPhone(request.phone());
 		user.setUpdatedAt(Instant.now());
+		user.setProfileImgUrl(request.profileImgUrl());
 		return user;
 	}
 
 	public UserResponseDto toDto(UserInfo user) {
 		return new UserResponseDto(
 				user.getId(),
+				user.getName(),
+				user.getProfileImgUrl(),
 				user.getEmail()	,
 				user.getPhone(),
 				user.getKycStatus(),
@@ -42,6 +45,7 @@ public class UserMapper {
 		user.setEmail(email);
 		user.setName(request.name());
 		user.setPhone(request.phone());
+		user.setProfileImgUrl(request.profileImgUrl());
 	}
 
 }

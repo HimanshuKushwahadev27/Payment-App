@@ -7,6 +7,8 @@ import com.emi.user_service.enums.KYCSTATUS;
 
 public record UserResponseDto(
 		UUID id,
+		String name,
+		String profileImgUrl,
 		String email,
 		Long phone,
 		KYCSTATUS status,

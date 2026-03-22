@@ -18,7 +18,11 @@ public record UserRequestCreateDto(
         @NotBlank(message = "Name cannot be empty")
         String name,
 
-  
+        @Schema(
+        description = "Profile image URL",
+        example = "https://cdn.library.com/users/profile123.png"
+        )
+        String profileImgUrl,
 
         @Schema(
                 description = "10 digit mobile number",
