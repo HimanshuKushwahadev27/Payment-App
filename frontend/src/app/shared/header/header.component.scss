@@ -1,0 +1,43 @@
+.navbar{
+  height:70px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 32px; 
+  
+}
+
+.nav-left{
+  display:flex;
+  align-items: center;
+  gap: 16px;
+  padding-left: 12px;
+}
+
+.nav-right{
+  display:flex;
+  align-items: center;
+  gap: 16px;
+  padding-left: 12px;
+}
+
+.logo{
+  font-size:20px;
+  font-weight:600;
+  color: #9c27b0;
+  cursor: pointer;
+}
+
+.nav-center{
+  display:flex;
+  align-items:center;
+  gap:20px;
+  left: 50%;
+  
+}
+
+
+mat-toolbar {
+  background: transparent !important;
+  box-shadow: none !important;
+}

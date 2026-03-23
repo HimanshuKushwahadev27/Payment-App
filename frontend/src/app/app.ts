@@ -1,22 +1,16 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { AuthService } from './core/auth/service/auth.service';
-import { UserCreateComponent } from './features/users/pages/user-create/user-create.component';
+
+import { HeaderComponent } from './shared/header/header.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, UserCreateComponent],
+  imports: [
+    RouterOutlet, HeaderComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App implements OnInit {
+export class App  {
   protected readonly title = signal('frontend');
-
-  private oauthService = inject(AuthService);
-
-
-  ngOnInit(): void {
-    this.oauthService.initLogin();
-  }
 
 }

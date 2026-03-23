@@ -12,7 +12,7 @@ export class AuthService {
   
 
   isAuthenticated = signal(false);
-
+  isDoneLoading= false;
   
   constructor(
     private oauthService: OAuthService,
@@ -20,32 +20,31 @@ export class AuthService {
     private router : Router 
     ) {}
 
-  initLogin() {
+  initLogin() : Promise<void>{
 
     this.oauthService.configure(authConfig);
 
     this.oauthService.setupAutomaticSilentRefresh();
 
-    this.oauthService.loadDiscoveryDocumentAndTryLogin().then(() => {
+    return this.oauthService.loadDiscoveryDocumentAndTryLogin().then(() => {
       this.updateAuthState();
+      this.isDoneLoading=true;
+
 
       if (this.oauthService.hasValidAccessToken()) {
         this.checkUserProfile();
-      }else{
-        this.login();
       }
     });
+  }
 
-    this.oauthService.events.subscribe(() => {
-      this.updateAuthState();
-    });
+  isAuthReady(){
+    return this.isDoneLoading;
   }
 
   checkUserProfile() {
     this.userService.getCurrentUser().subscribe({
       next: (user) => {
         this.userService.loadUser();
-        this.router.navigate(['/']);
       },
       error: () => {
         this.router.navigate(['/create-user']);

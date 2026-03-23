@@ -1,0 +1,72 @@
+
+<div class="d-flex align-items-center gap-2 ms-auto">
+
+
+@if (authService.isAuthenticated()) {
+
+
+<button mat-button class="nav-btn" >
+  My Wallet
+</button>
+
+<!-- PROFILE BUTTON -->
+<button mat-button class="profile-btn" [matMenuTriggerFor]="profileMenu">
+
+  <img
+    class="avatar"
+    [src]="userService.currentUser()?.profileImgUrl || 'assets/default-avatar.png'"
+  />
+
+</button>
+
+<!-- DROPDOWN MENU -->
+<mat-menu #profileMenu="matMenu" class="profile-menu">
+
+  <!-- PROFILE PREVIEW -->
+  <div class="menu-profile">
+
+    @if(userService.currentUser()?.profileImgUrl){
+    <img
+      class="avatar-large"
+      [src]="userService.currentUser()?.profileImgUrl"
+    />
+    }
+    @if(!userService.currentUser()?.profileImgUrl){
+    <mat-card-header>
+      <mat-icon mat-card-avatar>person</mat-icon>
+      <mat-card-title>My Profile</mat-card-title>
+    </mat-card-header>
+    }
+    
+    <div>
+      <div class="menu-username">
+        {{ userService.currentUser()?.name }}
+      </div>
+
+      <div class="menu-view">
+        View profile
+      </div>
+    </div>
+
+  </div>
+
+  <mat-divider></mat-divider>
+
+
+  <button mat-menu-item>
+    <mat-icon>settings</mat-icon>
+    Settings
+  </button>
+
+  <mat-divider></mat-divider>
+
+  <button mat-menu-item (click)="authService.logout()">
+    <mat-icon>logout</mat-icon>
+    Logout
+  </button>
+
+</mat-menu>
+
+}
+
+</div>

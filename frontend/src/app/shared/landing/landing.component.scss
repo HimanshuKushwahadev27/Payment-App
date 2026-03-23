@@ -1,0 +1,60 @@
+/* 🌈 Full screen layout */
+.landing {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  /* Soft material background */
+  background: linear-gradient(
+    135deg,
+    #f3e5f5 0%,
+    #ede7f6 50%,
+    #e1bee7 100%
+  );
+
+  text-align: center;
+  padding: 20px;
+}
+
+/* 🧾 Title */
+.landing h1 {
+  font-size: 48px;
+  font-weight: 700;
+  color: #9c27b0; /* MAIN COLOR */
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+}
+
+/* ✨ Subtitle */
+.landing p {
+  font-size: 18px;
+  color: #7b1fa2; /* darker shade of purple */
+  margin-bottom: 32px;
+}
+
+/* 🚀 Button */
+.signin-btn {
+  padding: 12px 36px !important;
+  font-size: 16px;
+  border-radius: 30px !important;
+
+  background: #9c27b0 !important; /* primary */
+  color: white !important;
+
+  box-shadow: 0 6px 18px rgba(156, 39, 176, 0.3) !important;
+  transition: all 0.25s ease;
+}
+
+/* Hover */
+.signin-btn:hover {
+  background: #7b1fa2 !important; /* darker purple */
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(156, 39, 176, 0.4) !important;
+}
+
+/* Click */
+.signin-btn:active {
+  transform: scale(0.97);
+}
