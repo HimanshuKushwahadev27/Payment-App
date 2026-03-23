@@ -29,8 +29,6 @@ export class HeaderButtonComponent {
 
   constructor(public authService: AuthService, public userService: UserService) {}
 
-
-
   logout(){
     this.authService.logout();
   }

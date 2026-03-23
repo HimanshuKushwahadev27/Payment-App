@@ -1,0 +1,54 @@
+.landing {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: linear-gradient(135deg, #f3e5f5, #ede7f6, #e1bee7);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.card {
+  background: #ffffff;
+  padding: 40px 60px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(156, 39, 176, 0.25);
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+h1 {
+  font-size: 42px;
+  margin-bottom: 10px;
+  color: #9c27b0;
+}
+
+.tagline {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+button {
+  font-size: 16px;
+  padding: 10px 30px;
+  border-radius: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Smooth entry animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

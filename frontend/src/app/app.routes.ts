@@ -3,24 +3,24 @@ import { authGuard } from './core/guard/auth-guard';
 
 export const routes: Routes =
 [
-
-  {
+  { 
     path: '',
     canActivate: [authGuard],
-    loadComponent: () => import('./shared/landing/landing.component').then(m => m.LandingComponent)
-  },
-  { 
-    path: 'landing',
-    canActivate: [authGuard],
-    loadComponent: () => import('./shared/header/header.component').then(m => m.HeaderComponent)
+    loadComponent: () => import('./shared/home/home.component').then(m => m.HomeComponent)
   },
 
   { 
     path: 'create-user',
-    canActivate: [authGuard],
-    loadComponent: () => import('./features/users/pages/user-create/user-create.component').then(m => m.UserCreateComponent)
-  }
+        canActivate: [authGuard],
 
+    loadComponent: () => import('./features/users/pages/user-create/user-create.component').then(m => m.UserCreateComponent)
+  },
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./shared/login/login.component')
+        .then(m => m.LoginComponent)
+  },
 
 
 

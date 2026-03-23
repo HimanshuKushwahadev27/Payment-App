@@ -12,39 +12,40 @@ export class AuthService {
   
 
   isAuthenticated = signal(false);
-  isDoneLoading= false;
   
   constructor(
-    private oauthService: OAuthService,
+    public oauthService: OAuthService,
     private userService: UserService,
     private router : Router 
     ) {}
 
-  initLogin() : Promise<void>{
+  initLogin() {
 
     this.oauthService.configure(authConfig);
 
     this.oauthService.setupAutomaticSilentRefresh();
 
-    return this.oauthService.loadDiscoveryDocumentAndTryLogin().then(() => {
+     this.oauthService.loadDiscoveryDocumentAndTryLogin().then(() => {
+        
       this.updateAuthState();
-      this.isDoneLoading=true;
 
 
       if (this.oauthService.hasValidAccessToken()) {
         this.checkUserProfile();
       }
     });
+
+        this.oauthService.events.subscribe(() => {
+      this.updateAuthState();
+    });
   }
 
-  isAuthReady(){
-    return this.isDoneLoading;
-  }
 
   checkUserProfile() {
     this.userService.getCurrentUser().subscribe({
       next: (user) => {
         this.userService.loadUser();
+        this.router.navigate(['/']);
       },
       error: () => {
         this.router.navigate(['/create-user']);
