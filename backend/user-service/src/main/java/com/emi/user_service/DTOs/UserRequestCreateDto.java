@@ -6,7 +6,6 @@ import com.emi.user_service.enums.KYCSTATUS;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 
 public record UserRequestCreateDto(
 
@@ -30,7 +29,6 @@ public record UserRequestCreateDto(
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         @NotNull(message = "Phone number is required")
-        @Pattern(regexp = "^[0-9]{10}$", message = "Phone must be a valid 10 digit number")
         Long phone,
 
         @Schema(

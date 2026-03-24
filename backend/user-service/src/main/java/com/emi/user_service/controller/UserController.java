@@ -74,6 +74,10 @@ public class UserController {
 				); 
 	}
 	
+		@GetMapping("/debug")
+		public String debug(@AuthenticationPrincipal Jwt jwt) {
+				return jwt == null ? "JWT NULL ❌" : "JWT OK ✅";
+		}
 	
 	@GetMapping("/users/{id}/email")
 	public String getEmail(@PathVariable UUID id) {

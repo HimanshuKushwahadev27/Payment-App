@@ -11,11 +11,16 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/userservice_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
+      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB: TRACE
+      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY_WEB_CSRF: TRACE
+      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB_SERVLET: DEBUG
+      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY: TRACE
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:8080/realms/Payment-realm/protocol/openid-connect/certs
     ports:
       - "8083:8080"
     networks:
       - Payment-net
+
 networks:
   Payment-net:
     external: true

@@ -1,5 +1,7 @@
 package com.emi.api_gateway.config;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -10,6 +12,8 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 
 
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsConfigurationSource;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -36,13 +40,13 @@ public class SecurityConfig {
                 	.pathMatchers(WHITELIST).permitAll()
                     .anyExchange().authenticated()
                 )
+                .cors((Customizer.withDefaults()))
                 .oauth2ResourceServer(oauth2 ->
-                    oauth2.jwt(Customizer.withDefaults())
+                    oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(new ReactiveJwtAuthConverter()))
                 )
                 .build();
     }
     
-   
 }  
     
   

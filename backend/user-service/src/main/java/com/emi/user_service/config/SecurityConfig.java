@@ -15,7 +15,6 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 
 @Configuration
-
 public class SecurityConfig {
 
 	@Bean
@@ -26,7 +25,7 @@ public class SecurityConfig {
                     .requestMatchers("/public/**").permitAll()
                     .anyRequest().authenticated()
 			)
-			.oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()))
+			.oauth2ResourceServer(oauth -> oauth.jwt(jwt -> jwt.jwtAuthenticationConverter(new KeycloakJwtConverter())))
 			.build()
 			;
 	}
@@ -58,4 +57,5 @@ public class SecurityConfig {
  	            .grantType(OAuth2Constants.PASSWORD)
  	            .build();
  	}
+	
 }
