@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { OAuthService } from 'angular-oauth2-oidc';
 import { AuthService } from '../../core/auth/service/auth.service';
 
 @Component({

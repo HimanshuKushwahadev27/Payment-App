@@ -5,6 +5,7 @@ import {  MatButtonModule } from '@angular/material/button';
 import {  MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { userRequest, UserService } from '../../service/user.service';
+import { raceWith } from 'rxjs';
 
 @Component({
   selector: 'app-create-user',
@@ -33,14 +34,16 @@ export class UserCreateComponent {
     kycStatus: 'PENDING'
   });
 
+
   createUser(){
-    if(this.userForm.invalid)return;
-    
-    const payload: userRequest = this.userForm.getRawValue();
+    if(this.userForm.invalid)return; 
+      const raw = this.userForm.getRawValue();
 
-
+    const payload: userRequest = {
+      ...raw,
+      phone: Number(raw.phone)
+    };
     this.userService.createUser(payload);
-      
   }
 
 }

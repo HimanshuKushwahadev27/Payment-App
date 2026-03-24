@@ -18,7 +18,7 @@ export interface userProfile{
 export interface userRequest{
   name: string;
   profileImgUrl: string;
-  phone: string;
+  phone: number;
   kycStatus: string;
 }
 @Injectable({
@@ -36,7 +36,7 @@ export class UserService {
     return this.http.get<userProfile>('/api/user/');
   }
 
-
+  
   createUser(request: userRequest){
     return this.http.post<userProfile>('/api/user/create', request)
       .subscribe({

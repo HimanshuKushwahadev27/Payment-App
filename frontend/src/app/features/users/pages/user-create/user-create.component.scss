@@ -1,0 +1,49 @@
+.create-user{
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+  min-height: 100vh;
+   background: linear-gradient(135deg, #f3e5f5, #ede7f6)
+}
+
+.create-card {
+  width: 360px;
+  padding: 28px;
+  border-radius: 12px;
+
+    background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  box-shadow: 0 20px 50px rgba(156, 39, 176, 0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease
+}
+
+.create-card h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+        color:  #9c27b0;
+
+}
+
+mat-form-field {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.create-card button {
+  width: 100%;
+  margin-top: 14px;
+  padding: 10px 16px;
+
+  font-size: 15px;
+  border-radius: 24px;
+
+  background-color: #9c27b0;
+  color: white;
+
+  transition: all 0.25s ease;
+}

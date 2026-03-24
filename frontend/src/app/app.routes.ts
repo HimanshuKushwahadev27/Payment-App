@@ -11,8 +11,7 @@ export const routes: Routes =
 
   { 
     path: 'create-user',
-        canActivate: [authGuard],
-
+    canActivate: [authGuard],
     loadComponent: () => import('./features/users/pages/user-create/user-create.component').then(m => m.UserCreateComponent)
   },
   {

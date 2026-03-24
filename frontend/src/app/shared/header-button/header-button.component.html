@@ -3,22 +3,22 @@
 
 
 @if (authService.isAuthenticated()) {
+<div class="nav-actions">
+  <button mat-button class="nav-btn" >
+      <mat-icon>account_balance_wallet</mat-icon>
+    <span>My Wallet</span>
+  </button>
 
-
-<button mat-button class="nav-btn" >
-  My Wallet
-</button>
-
-<!-- PROFILE BUTTON -->
-<button mat-button class="profile-btn" [matMenuTriggerFor]="profileMenu">
+  <!-- PROFILE BUTTON -->
+  <button mat-icon-button  class="profile-btn" [matMenuTriggerFor]="profileMenu">
 
   <img
     class="avatar"
     [src]="userService.currentUser()?.profileImgUrl || 'assets/default-avatar.png'"
   />
 
-</button>
-
+  </button>
+</div>
 <!-- DROPDOWN MENU -->
 <mat-menu #profileMenu="matMenu" class="profile-menu">
 
@@ -26,10 +26,12 @@
   <div class="menu-profile">
 
     @if(userService.currentUser()?.profileImgUrl){
-    <img
-      class="avatar-large"
-      [src]="userService.currentUser()?.profileImgUrl"
-    />
+    <div class="avatar-wrapper">
+      <img
+        class="avatar-large"
+        [src]="userService.currentUser()?.profileImgUrl"
+      />
+    </div>
     }
     @if(!userService.currentUser()?.profileImgUrl){
     <mat-card-header>
