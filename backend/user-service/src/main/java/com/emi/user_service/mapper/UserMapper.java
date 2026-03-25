@@ -24,7 +24,6 @@ public class UserMapper {
 		user.setName(request.name());
 		user.setPhone(request.phone());
 		user.setUpdatedAt(Instant.now());
-		user.setProfileImgUrl(request.profileImgUrl());
 		return user;
 	}
 
@@ -45,7 +44,6 @@ public class UserMapper {
 		user.setEmail(email);
 		user.setName(request.name());
 		user.setPhone(request.phone());
-		user.setProfileImgUrl(request.profileImgUrl());
 	}
 
 }

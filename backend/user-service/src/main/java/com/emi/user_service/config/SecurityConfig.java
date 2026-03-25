@@ -9,6 +9,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
+import io.minio.MinioClient;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -57,5 +58,12 @@ public class SecurityConfig {
  	            .grantType(OAuth2Constants.PASSWORD)
  	            .build();
  	}
+
+	MinioClient minioClient(){
+		return MinioClient.builder()
+		 			.endpoint("http://localhost:9000")
+					.credentials("admin", "admin")
+					.build();
+	}
 	
 }

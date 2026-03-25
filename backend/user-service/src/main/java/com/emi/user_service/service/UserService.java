@@ -16,4 +16,6 @@ public interface UserService {
 	public void deleteUser(UUID keycloakId);
 	public UserResponseDto updateUser(UserRequestUpdateDto request, String email, UUID keycloakId);
 	public String getEmail(UUID userId);
+	public void saveImageUrl(String imgUrl, UUID keycloakId);
+
 }

@@ -21,6 +21,13 @@
 
 <dependencies>
 
+    <dependency>
+        <groupId>io.minio</groupId>
+        <artifactId>minio</artifactId>
+        <version>8.6.0</version>
+        <scope>compile</scope>
+    </dependency>
+
 	<dependency>
 	    <groupId>org.keycloak</groupId>
 	    <artifactId>keycloak-admin-client</artifactId>

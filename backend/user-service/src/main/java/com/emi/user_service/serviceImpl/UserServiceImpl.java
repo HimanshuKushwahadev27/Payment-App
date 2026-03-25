@@ -1,5 +1,6 @@
 package com.emi.user_service.serviceImpl;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -93,6 +94,15 @@ public class UserServiceImpl implements UserService {
 				.toRepresentation();
 		
 		return user.getEmail();
+	}
+
+	@Override
+	public void saveImageUrl(String imgUrl, UUID keycloakId) {
+	UserInfo user = userRepo.findByKeycloakId(keycloakId).orElseThrow(() ->  new UserExistsException("please register ur self"));
+
+	user.setProfileImgUrl(imgUrl);
+	user.setUpdatedAt(Instant.now());
+	userRepo.save(user);
 	}	
 
 }

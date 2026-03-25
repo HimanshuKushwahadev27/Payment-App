@@ -15,13 +15,6 @@ public record UserRequestUpdateDto(
         String name,
 
         @Schema(
-        description = "Profile image URL",
-        example = "https://cdn.library.com/users/profile123.png"
-        )
-        String profileImgUrl,
-
-
-        @Schema(
                 description = "10 digit mobile number",
                 example = "9876543210",
                 requiredMode = Schema.RequiredMode.REQUIRED

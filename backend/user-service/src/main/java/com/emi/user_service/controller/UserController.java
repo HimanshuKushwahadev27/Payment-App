@@ -19,7 +19,6 @@ import com.emi.user_service.DTOs.UserRequestCreateDto;
 import com.emi.user_service.DTOs.UserRequestUpdateDto;
 import com.emi.user_service.DTOs.UserResponseDto;
 import com.emi.user_service.service.UserService;
-
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -73,11 +72,7 @@ public class UserController {
 						)
 				); 
 	}
-	
-		@GetMapping("/debug")
-		public String debug(@AuthenticationPrincipal Jwt jwt) {
-				return jwt == null ? "JWT NULL ❌" : "JWT OK ✅";
-		}
+
 	
 	@GetMapping("/users/{id}/email")
 	public String getEmail(@PathVariable UUID id) {
