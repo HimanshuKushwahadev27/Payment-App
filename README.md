@@ -178,7 +178,92 @@ This ensures:
 | Containerization | Docker                  |
 
 ---
+##  KYC & Document Verification
 
+This system includes a **KYC (Know Your Customer)** module to verify user identity, similar to real fintech platforms.
+
+---
+
+##  KYC Workflow
+
+
+User → Upload Documents (PAN / Aadhaar / Selfie)
+→ OTP Verification (Phone)
+→ KYC Status = PENDING
+→ Admin Verification
+→ VERIFIED / REJECTED
+
+
+---
+
+##  KYC Features
+
+- OTP-based user verification  
+- Document upload (PAN, Aadhaar, Selfie)  
+- Admin approval flow  
+- Status tracking: `PENDING → VERIFIED → REJECTED`  
+- Secure document storage  
+
+---
+
+##  KYC Architecture
+
+
+Frontend (Angular)
+│
+▼
+User Service (KYC Module)
+│
+├── OTP Service (In-memory / Redis-ready)
+├── Document Service
+▼
+MinIO (Object Storage)
+▼
+PostgreSQL (KYC + Document Metadata)
+
+
+---
+
+##  Document Storage (MinIO - S3 Compatible)
+
+To handle file uploads efficiently, this project uses **MinIO**, an S3-compatible object storage.
+
+###  Why MinIO?
+
+- Direct upload from frontend (via pre-signed URLs)  
+- Reduces backend load  
+- Scalable and production-ready  
+- Easily migratable to AWS S3  
+
+---
+
+##  File Upload Flow
+
+
+Frontend → Request Upload URL
+→ Backend generates Pre-Signed URL
+→ Frontend uploads directly to MinIO
+→ Backend stores file URL in DB
+
+
+---
+
+## 📡 Example API Flow
+
+
+http
+GET  /api/user/file/upload-url
+PUT  (Pre-signed URL) → MinIO
+POST /api/user/file/save-url
+🗂️ Bucket Structure
+kyc-documents/
+   └── kyc/
+       └── {userId}/
+            ├── pan.jpg
+            ├── aadhaar.jpg
+            └── selfie.jpg
+
+---
 #  Key Features
 
 *  Event-driven microservices architecture
