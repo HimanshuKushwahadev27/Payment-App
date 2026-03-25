@@ -6,6 +6,28 @@
    background: linear-gradient(135deg, #f3e5f5, #ede7f6)
 }
 
+.drop-zone {
+  border: 2px dashed #9c27b0;
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: 0.2s;
+}
+
+.drop-zone:hover {
+  background: rgba(156, 39, 176, 0.05);
+}
+
+.preview-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #9c27b0;
+}
+
 .create-card {
   width: 360px;
   padding: 28px;

@@ -15,9 +15,13 @@ export interface userProfile{
   createdAt: Date;
 }
 
+export interface requestDocument{
+  imgUrl: string;
+  type: string;
+}
+
 export interface userRequest{
   name: string;
-  profileImgUrl: string;
   phone: number;
   kycStatus: string;
 }
@@ -35,8 +39,11 @@ export class UserService {
   getCurrentUser(): Observable<userProfile>{
     return this.http.get<userProfile>('/api/user/');
   }
-
   
+  saveUploadUrl(request: requestDocument): Observable<string>{
+    return this.http.post<string>('/api/user/file/save-url', request);
+  }
+
   createUser(request: userRequest){
     return this.http.post<userProfile>('/api/user/create', request)
       .subscribe({

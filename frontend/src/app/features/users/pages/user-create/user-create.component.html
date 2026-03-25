@@ -3,17 +3,35 @@
   <div class="create-card">
 
     <h2>Complete Your Profile</h2>
+    <div 
+      class="drop-zone"
+      (dragover)="onDragOver($event)"
+      (drop)="onDrop($event)"
+      (click)="fileInput.click()"
+    >
+
+      @if (!previewUrl) {
+        <p>Drag & Drop Profile Image or Click</p>
+      }
+
+      @if (previewUrl) {
+        <img [src]="previewUrl" class="preview-img"/>
+      }
+
+      <input 
+        type="file" 
+        #fileInput 
+        hidden 
+        (change)="onFileSelect($event)" 
+        accept="image/*"
+      />
+    </div>
 
     <form [formGroup]="userForm" (ngSubmit) = "createUser()">
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Display Name</mat-label>
         <input matInput formControlName="name">
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Profile Image URL</mat-label>
-        <input matInput formControlName="profileImgUrl">
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
