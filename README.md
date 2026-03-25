@@ -186,13 +186,13 @@ This system includes a **KYC (Know Your Customer)** module to verify user identi
 
 ##  KYC Workflow
 
-
+```
 User → Upload Documents (PAN / Aadhaar / Selfie)
 → OTP Verification (Phone)
 → KYC Status = PENDING
 → Admin Verification
 → VERIFIED / REJECTED
-
+```
 
 ---
 
