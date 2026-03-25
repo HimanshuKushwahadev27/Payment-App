@@ -208,7 +208,7 @@ User → Upload Documents (PAN / Aadhaar / Selfie)
 
 ##  KYC Architecture
 
-
+```
 Frontend (Angular)
 │
 ▼
@@ -221,7 +221,7 @@ MinIO (Object Storage)
 ▼
 PostgreSQL (KYC + Document Metadata)
 
-
+```
 ---
 
 ##  Document Storage (MinIO - S3 Compatible)
@@ -239,18 +239,18 @@ To handle file uploads efficiently, this project uses **MinIO**, an S3-compatibl
 
 ##  File Upload Flow
 
-
+```
 Frontend → Request Upload URL
 → Backend generates Pre-Signed URL
 → Frontend uploads directly to MinIO
 → Backend stores file URL in DB
-
+```
 
 ---
 
 ## 📡 Example API Flow
 
-
+```
 http
 GET  /api/user/file/upload-url
 PUT  (Pre-signed URL) → MinIO
@@ -262,7 +262,7 @@ kyc-documents/
             ├── pan.jpg
             ├── aadhaar.jpg
             └── selfie.jpg
-
+```
 ---
 #  Key Features
 
