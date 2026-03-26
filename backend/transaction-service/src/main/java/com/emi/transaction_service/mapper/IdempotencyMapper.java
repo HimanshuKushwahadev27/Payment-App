@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import com.emi.transaction_service.entity.IdempotencyRecord;
 import com.emi.transaction_service.enums.IdempotencyStatus;
 import com.emi.transaction_service.requestDtos.TransactionPayoutRequestDto;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 @Component
 public class IdempotencyMapper {
 
-	private final ObjectMapper objectMapper;
 
 	
 	public IdempotencyRecord getEntity(TransactionPayoutRequestDto request, UUID idempotencyId, UUID keycloakId) {

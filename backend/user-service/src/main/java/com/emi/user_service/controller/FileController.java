@@ -25,11 +25,12 @@ public class FileController {
   private final FileService fileService;
 
   @GetMapping("/upload-url")
-	public ResponseEntity<String> getUploadUrl(@RequestParam String fileName) {
+	public ResponseEntity<String> getUploadUrl(@RequestParam("fileName") String fileName) {
 			try {
 					String url = fileService.getPresignedUrl(fileName);
 					return ResponseEntity.ok(url);
 			} catch (Exception e) {
+					 e.printStackTrace();   
 					return ResponseEntity.internalServerError().build();
 			}
 	}

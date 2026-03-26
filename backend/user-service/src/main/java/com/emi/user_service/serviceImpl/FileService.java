@@ -3,6 +3,7 @@ package com.emi.user_service.serviceImpl;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.emi.user_service.DTOs.RequestDocument;
@@ -22,6 +23,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FileService {
   
+  @Value("${minio.endpoint}")
+  private  String endpoint;
+
+  @Value("${minio.public.endpoint}")
+  private  String publicEndpoint;
+  
   private final DocumentRepo documentRepo;
   private final UserRepo userRepo;
   private final MinioClient minioClient;
@@ -30,14 +37,15 @@ public class FileService {
   private final KycService keycService;
 
   public String getPresignedUrl(String fileName) throws Exception{
-            return minioClient.getPresignedObjectUrl(
-                GetPresignedObjectUrlArgs.builder()
-                        .method(Method.PUT)
-                        .bucket(bucket)
-                        .object(fileName)
-                        .expiry(10, TimeUnit.MINUTES)
-                        .build()
-        );
+          String internalUrl = minioClient.getPresignedObjectUrl(
+        GetPresignedObjectUrlArgs.builder()
+            .method(Method.PUT)
+            .bucket(bucket)
+            .object(fileName)
+            .expiry(10, TimeUnit.MINUTES)
+            .build()
+    );
+    return internalUrl.replace(endpoint, publicEndpoint);
   }
 
   public void storeDocument(RequestDocument request, UUID keycloakId){

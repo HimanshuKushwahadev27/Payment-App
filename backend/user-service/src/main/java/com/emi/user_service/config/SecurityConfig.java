@@ -3,9 +3,9 @@ package com.emi.user_service.config;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -18,6 +18,9 @@ import io.swagger.v3.oas.models.info.License;
 @Configuration
 public class SecurityConfig {
 
+			@Value("${minio.endpoint}")
+		private String endpoint;
+		
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http
@@ -59,10 +62,11 @@ public class SecurityConfig {
  	            .build();
  	}
 
+	@Bean
 	MinioClient minioClient(){
 		return MinioClient.builder()
-		 			.endpoint("http://localhost:9000")
-					.credentials("admin", "admin")
+		 			.endpoint(endpoint)
+					.credentials("minioadmin", "minioadmin")
 					.build();
 	}
 	
