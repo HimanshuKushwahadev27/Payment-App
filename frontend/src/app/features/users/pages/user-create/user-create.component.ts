@@ -67,28 +67,33 @@ export class UserCreateComponent {
   }
 
   handleFile(file: File) {
-
     this.previewUrl = URL.createObjectURL(file);
 
-    this.http.get<string>(`/api/user/file/upload-url?fileName=${file.name}`)
-      .subscribe((uploadUrl) => {
+    this.http.get(`/api/user/file/upload-url?fileName=${file.name}`, { responseType: 'text' })
+      .subscribe({
+        next: (uploadUrl) => {
 
-        this.http.put(uploadUrl, file, {
-          headers: { 'Content-Type': file.type }
-        }).subscribe(() => {
+          fetch(uploadUrl, {
+            method: 'PUT',
+            headers: { 'Content-Type': file.type },
+            body: file
+          })
+          .then(res => {
+            if (!res.ok) throw new Error(`S3 upload failed: ${res.status}`);
 
-          const cleanUrl = uploadUrl.split('?')[0];
+            const cleanUrl = uploadUrl.split('?')[0];
+            const payload: requestDocument = {
+              imgUrl: cleanUrl,
+              type: 'PROFILE_IMAGE'
+            };
 
-          const payload: requestDocument = {
-            imgUrl: cleanUrl,
-            type: 'PROFILE_IMAGE'
-          }
+            this.userService.saveUploadUrl(payload);
+            console.log('Upload complete');
+          })
+          .catch(err => console.error('S3 PUT error:', err));
 
-          this.userService.saveUploadUrl(payload);
-
-          console.log('Upload complete');
-        });
-
+        },
+        error: (err) => console.error('Failed to get presigned URL:', err)
       });
   }
 
