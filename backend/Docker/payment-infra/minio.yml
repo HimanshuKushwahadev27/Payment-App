@@ -10,6 +10,8 @@ services:
     environment:
       MINIO_ROOT_USER: minioadmin 
       MINIO_ROOT_PASSWORD: minioadmin
+      MINIO_REGION: us-east-1
+      MINIO_DOMAIN: localhost,minio 
     volumes:
       - minio_data:/data
     command: server /data --console-address ":9001"

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.emi.user_service.DTOs.RequestDocument;
 import com.emi.user_service.serviceImpl.FileService;
@@ -25,14 +26,9 @@ public class FileController {
   private final FileService fileService;
 
   @GetMapping("/upload-url")
-	public ResponseEntity<String> getUploadUrl(@RequestParam("fileName") String fileName) {
-			try {
-					String url = fileService.getPresignedUrl(fileName);
-					return ResponseEntity.ok(url);
-			} catch (Exception e) {
-					 e.printStackTrace();   
-					return ResponseEntity.internalServerError().build();
-			}
+	public ResponseEntity<String> getUploadUrl(@RequestParam("fileName") MultipartFile  fileName)throws Exception {
+		String fileUrl = fileService.uploadFile(fileName);
+    return ResponseEntity.ok(fileUrl);
 	}
 
 	@PostMapping("/save-url")

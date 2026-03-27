@@ -6,6 +6,7 @@ import org.keycloak.admin.client.KeycloakBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -18,8 +19,11 @@ import io.swagger.v3.oas.models.info.License;
 @Configuration
 public class SecurityConfig {
 
-			@Value("${minio.endpoint}")
+		@Value("${minio.endpoint}")
 		private String endpoint;
+
+		@Value("${minio.public.endpoint}")
+		private String publicEndpoint;
 		
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -67,7 +71,10 @@ public class SecurityConfig {
 		return MinioClient.builder()
 		 			.endpoint(endpoint)
 					.credentials("minioadmin", "minioadmin")
+					.region("us-east-1")     
 					.build();
 	}
+
+
 	
 }

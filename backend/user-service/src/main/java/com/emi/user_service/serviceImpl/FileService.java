@@ -3,8 +3,10 @@ package com.emi.user_service.serviceImpl;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.emi.user_service.DTOs.RequestDocument;
 import com.emi.user_service.entity.Document;
@@ -16,6 +18,7 @@ import com.emi.user_service.service.UserService;
 
 import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
 import io.minio.http.Method;
 import lombok.RequiredArgsConstructor;
 
@@ -31,22 +34,28 @@ public class FileService {
   
   private final DocumentRepo documentRepo;
   private final UserRepo userRepo;
+
+  @Qualifier("publicMinioEndpoint")
   private final MinioClient minioClient;
+
   private final String bucket = "user-documents";
   private final UserService userService;
   private final KycService keycService;
 
-  public String getPresignedUrl(String fileName) throws Exception{
-          String internalUrl = minioClient.getPresignedObjectUrl(
-        GetPresignedObjectUrlArgs.builder()
-            .method(Method.PUT)
-            .bucket(bucket)
-            .object(fileName)
-            .expiry(10, TimeUnit.MINUTES)
-            .build()
-    );
-    return internalUrl.replace(endpoint, publicEndpoint);
-  }
+   public String uploadFile(MultipartFile file) throws Exception {
+      String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+
+      minioClient.putObject(
+         PutObjectArgs.builder()
+               .bucket(bucket)
+               .object(fileName)
+               .stream(file.getInputStream(), file.getSize(), -1)
+               .contentType(file.getContentType())
+               .build()
+      );
+
+      return publicEndpoint + "/" + bucket + "/" + fileName;
+   }
 
   public void storeDocument(RequestDocument request, UUID keycloakId){
     if(!userRepo.existsByKeycloakId(keycloakId)){
