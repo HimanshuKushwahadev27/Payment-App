@@ -10,6 +10,7 @@ spring:
     gateway:
       server:
         webflux:
+          max-request-size: 10MB
           routes:
             - id: payment-service
               uri: http://payment-service:8080

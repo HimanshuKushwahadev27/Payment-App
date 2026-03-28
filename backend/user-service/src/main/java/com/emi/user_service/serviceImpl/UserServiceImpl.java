@@ -17,7 +17,9 @@ import com.emi.user_service.repository.UserRepo;
 import com.emi.user_service.service.UserService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -100,6 +102,7 @@ public class UserServiceImpl implements UserService {
 	public void saveImageUrl(String imgUrl, UUID keycloakId) {
 	UserInfo user = userRepo.findByKeycloakId(keycloakId).orElseThrow(() ->  new UserExistsException("please register ur self"));
 
+	log.info("from userService" + imgUrl);
 	user.setProfileImgUrl(imgUrl);
 	user.setUpdatedAt(Instant.now());
 	userRepo.save(user);

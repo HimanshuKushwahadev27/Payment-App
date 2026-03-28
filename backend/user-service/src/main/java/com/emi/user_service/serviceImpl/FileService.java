@@ -1,7 +1,6 @@
 package com.emi.user_service.serviceImpl;
 
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,12 +15,12 @@ import com.emi.user_service.repository.DocumentRepo;
 import com.emi.user_service.repository.UserRepo;
 import com.emi.user_service.service.UserService;
 
-import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
-import io.minio.http.Method;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FileService {
@@ -40,7 +39,7 @@ public class FileService {
 
   private final String bucket = "user-documents";
   private final UserService userService;
-  private final KycService keycService;
+  private final KycService kycService;
 
    public String uploadFile(MultipartFile file) throws Exception {
       String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
@@ -68,11 +67,12 @@ public class FileService {
 
           documentRepo.save(document);
        if(request.type()==DocumentType.DOCUMENT){
-          keycService.saveUrls(keycloakId, request.imgUrl(), DocumentType.DOCUMENT);
+          kycService.saveUrls(keycloakId, request.imgUrl(), DocumentType.DOCUMENT);
        }else if (request.type() == DocumentType.SELFIE_URL){
-          keycService.saveUrls(keycloakId, request.imgUrl(), DocumentType.SELFIE_URL);
-       }else{
-          userService.saveImageUrl(document.getImgUrl(), keycloakId);
+          kycService.saveUrls(keycloakId, request.imgUrl(), DocumentType.SELFIE_URL);
+       }else if (request.type() == DocumentType.PROFILE_IMAGE){
+         log.info("from fileService" + request.imgUrl());
+          userService.saveImageUrl(request.imgUrl(), keycloakId);
        }
   }
 }
