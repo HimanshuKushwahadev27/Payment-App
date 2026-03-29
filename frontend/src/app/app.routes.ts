@@ -20,6 +20,21 @@ export const routes: Routes =
       import('./shared/login/login.component')
         .then(m => m.LoginComponent)
   },
+  { 
+    path: 'home/user-profile',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/users/pages/user-profile/user-profile.component').then(m => m.UserProfileComponent)
+  },
+  { 
+    path: 'home/user-profile/update',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/users/pages/user-update/user-update.component').then(m => m.UserUpdateComponent)
+  },
+  { 
+    path: 'home/user-profile/kyc',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/users/pages/kyc/kyc.component').then(m => m.KycComponent)
+  },
 
 
 

@@ -1,1 +1,57 @@
-<p>user-profile works!</p>
+<div class="profile-page">
+  <div class="profile-container">
+    <div class="profile-card">
+
+      @if (userService.currentUser()) {
+
+        
+        <!-- Top row -->
+        <div class="profile-header">
+
+          <div class="avatar-wrapper">
+            <img
+              class="avatar"
+              [src]="userService.currentUser()?.profileImgUrl || 'assets/default-avatar.png'"
+            />
+          </div>
+
+          <div class="profile-info">
+            <h2 class="name">{{ userService.currentUser()?.name }}</h2>
+            <p class="email">{{ userService.currentUser()?.email }}</p>
+            <div class="meta">
+              <span>📞 {{ userService.currentUser()?.phone }}</span>
+              <span>Joined {{ userService.currentUser()?.createdAt | date:'MMM yyyy' }}</span>
+            </div>
+          </div>
+
+          <!-- KYC badge inline with info row -->
+          <div class="kyc-section">
+            <div class="kyc-badge" [ngClass]="getStatusClass()">
+              <mat-icon>{{ getKycIcon() }}</mat-icon>
+              {{ userService.currentUser()?.status }}
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Bottom row: Edit button -->
+        <div class="actions">
+          <button mat-raised-button class="edit-btn"
+                  [routerLink]="['/home/user-profile/update']">
+            <mat-icon>edit</mat-icon>
+            Edit Profile
+          </button>
+          @if (userService.currentUser()?.status != 'VERIFIED') {
+          <button mat-raised-button class="kyc-btn"
+                  [routerLink]="['/home/user-profile/kyc']">
+            <mat-icon>edit</mat-icon>
+            Complete Kyc
+          </button>
+          }
+        </div>
+
+      }
+
+    </div>
+  </div>
+</div>

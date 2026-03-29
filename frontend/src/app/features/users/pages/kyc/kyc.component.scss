@@ -1,0 +1,193 @@
+.create-user {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;      
+  min-height: 100vh;
+  padding: 80px 24px 24px 24px;  
+  background: linear-gradient(135deg, #f3e5f5, #ede7f6, #e1bee7) !important;
+  box-sizing: border-box;
+}
+
+
+.create-card {
+  width: 400px;
+  max-width: 100%;
+  padding: 28px;
+  border-radius: 12px;
+  overflow: hidden; 
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 20px 50px rgba(156, 39, 176, 0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
+}
+
+.create-card h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #9c27b0;
+}
+
+/* Drop Zone */
+.drop-zone {
+  border: 2px dashed #9c27b0;
+  border-radius: 12px;
+  height: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: #7b1fa2;
+  padding: 10px;
+  transition: background 0.2s;
+
+  p { margin: 0; line-height: 1.5; }
+}
+
+.drop-zone:hover {
+  background: rgba(156, 39, 176, 0.05);
+}
+
+.preview-img {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #9c27b0;
+}
+
+/* Form */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+/* Button */
+.create-card button {
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px 16px;
+  font-size: 15px;
+  border-radius: 24px;
+  background-color: #9c27b0;
+  color: white;
+  transition: all 0.25s ease;
+}
+
+.create-card button:hover {
+  background-color: #7b1fa2;
+  box-shadow: 0 4px 15px rgba(156, 39, 176, 0.4);
+}
+
+
+.otp-section {
+  display: flex;
+  flex-direction: column;
+  margin-top: 16px;
+  gap: 0;
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  button {
+    width: 100%;
+    margin-top: 8px;
+    padding: 10px 16px;
+    font-size: 15px;
+    border-radius: 24px;
+    background-color: #9c27b0;
+    color: white;
+    transition: all 0.25s ease;
+
+    &:hover {
+      background-color: #7b1fa2;
+      box-shadow: 0 4px 15px rgba(156, 39, 176, 0.4);
+    }
+  }
+}
+
+.otp-divider {
+  border: none;
+  border-top: 1px dashed rgba(156, 39, 176, 0.3);
+  margin: 16px 0 0 0;
+}
+
+
+/* ── Tablet (≤ 600px) ── */
+@media (max-width: 600px) {
+  .create-user {
+    padding: 70px 20px 20px 20px;  /* ← consistent side padding */
+  }
+
+  .create-card {
+    width: 100%;
+    padding: 20px 16px;
+    border-radius: 10px;
+  }
+
+  .create-card h2 {
+    font-size: 18px;
+    margin-bottom: 14px;
+  }
+
+  .drop-zone {
+    height: 100px;
+    font-size: 12px;
+    margin-bottom: 14px;
+  }
+
+  .preview-img {
+    width: 75px;
+    height: 75px;
+  }
+
+  .create-card button {
+    font-size: 14px;
+    padding: 9px 14px;
+  }
+}
+
+/* ── Mobile (≤ 400px) ── */
+@media (max-width: 400px) {
+  .create-user {
+    padding: 60px 16px 16px 16px;
+  }
+
+  .create-card {
+    padding: 16px 12px;
+    border-radius: 8px;
+  }
+
+  .create-card h2 {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .drop-zone {
+    height: 85px;
+    font-size: 11px;
+    margin-bottom: 12px;
+  }
+
+  .preview-img {
+    width: 65px;
+    height: 65px;
+  }
+
+  .create-card button {
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+}

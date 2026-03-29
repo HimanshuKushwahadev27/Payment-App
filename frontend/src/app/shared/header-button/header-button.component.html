@@ -41,11 +41,12 @@
     }
     
     <div>
-      <div class="menu-username">
+      <div class="menu-username"  [routerLink]="['/home/user-profile']">
         {{ userService.currentUser()?.name }}
       </div>
 
-      <div class="menu-view">
+      <div class="menu-view"  [routerLink]="['/home/user-profile']" 
+>
         View profile
       </div>
     </div>

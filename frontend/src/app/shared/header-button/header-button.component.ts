@@ -20,7 +20,8 @@ import { MatCardTitle } from '@angular/material/card';
     MatMenuModule,
     MatDividerModule,
     MatCardHeader,
-    MatCardTitle
+    MatCardTitle,
+    RouterLink
   ],
   templateUrl: './header-button.component.html',
   styleUrl: './header-button.component.scss',

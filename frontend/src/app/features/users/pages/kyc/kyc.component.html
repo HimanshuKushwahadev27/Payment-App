@@ -2,7 +2,7 @@
   
   <div class="create-card">
 
-    <h2>Update Your Profile</h2>
+    <h2>Fill the Kyc info</h2>
     <div 
       class="drop-zone"
       (dragover)="onDragOver($event)"
@@ -27,23 +27,36 @@
       />
     </div>
 
-    <form [formGroup]="userForm" (ngSubmit) = "updateUser()">
+    <form [formGroup]="userForm" (ngSubmit) = "validateUser()">
 
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Display Name</mat-label>
-        <input matInput formControlName="name">
+        <mat-label>Adhaar number</mat-label>
+        <input matInput formControlName="adhaarNumber">
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Phone Number</mat-label>
-        <input matInput formControlName="phone">
+        <mat-label>Pan Number</mat-label>
+        <input matInput formControlName="panNumber">
       </mat-form-field>
 
 
       <button mat-raised-button color="primary" type="submit">
-        Update Profile
+        Submit
       </button>
 
     </form>
+      @if (showOtpInput()) {
+        <hr class="otp-divider" />
+        <div class="otp-section">
+          <mat-form-field appearance="outline">
+            <mat-label>Enter OTP</mat-label>
+            <input matInput [(ngModel)]="otpValue" />
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" (click)="verifyOtp()">
+            Verify OTP
+          </button>
+        </div>
+      }
   </div>
 </div>

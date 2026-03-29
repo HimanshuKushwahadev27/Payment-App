@@ -5,7 +5,8 @@ import {  MatButtonModule } from '@angular/material/button';
 import {  MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { requestDocument, userRequest, UserService } from '../../service/user.service';
-import { raceWith } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-user',
@@ -22,11 +23,13 @@ import { raceWith } from 'rxjs';
 })
 export class UserCreateComponent {
 
+  pendingFile: File | null =null;
   previewUrl: string | null = null;
   private fb = inject(FormBuilder);
   private http = inject(HttpClient);
-
+  private toastr = inject(ToastrService);
   private userService = inject(UserService);
+  private router = inject(Router);
 
   userForm = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
@@ -43,7 +46,17 @@ export class UserCreateComponent {
       ...raw,
       phone: Number(raw.phone)
     };
-    this.userService.createUser(payload);
+    this.userService.createUser(payload).subscribe({
+      next: () => {
+          this.toastr.success('User profile completed successfully', 'Success');
+            if(this.pendingFile) {
+                this.handleFile(this.pendingFile);
+            } else {
+                this.router.navigate(['/']);
+            }
+      },
+          error: () => this.toastr.error('Failed to create user profile', 'Error')
+    })
   }
 
 
@@ -62,39 +75,33 @@ export class UserCreateComponent {
   onFileSelect(event: any) {
      const file = event.target.files[0];
     if (file) {
-      this.handleFile(file);
+      this.previewUrl= URL.createObjectURL(file);
+      this.pendingFile= file;
     }
   }
 
-  handleFile(file: File) {
-    this.previewUrl = URL.createObjectURL(file);
+ handleFile(file: File) {
+     const formData = new FormData();
+    formData.append('fileName', file);
 
-    this.http.get(`/api/user/file/upload-url?fileName=${file.name}`, { responseType: 'text' })
-      .subscribe({
-        next: (uploadUrl) => {
-
-          fetch(uploadUrl, {
-            method: 'PUT',
-            headers: { 'Content-Type': file.type },
-            body: file
-          })
-          .then(res => {
-            if (!res.ok) throw new Error(`S3 upload failed: ${res.status}`);
-
-            const cleanUrl = uploadUrl.split('?')[0];
-            const payload: requestDocument = {
-              imgUrl: cleanUrl,
-              type: 'PROFILE_IMAGE'
-            };
-
-            this.userService.saveUploadUrl(payload);
-            console.log('Upload complete');
-          })
-          .catch(err => console.error('S3 PUT error:', err));
-
-        },
-        error: (err) => console.error('Failed to get presigned URL:', err)
-      });
-  }
+    this.http.post('/api/user/file/upload-url', formData, { responseType: 'text' })
+        .subscribe({
+            next: (fileUrl) => {
+                const payload: requestDocument = {
+                    imgUrl: fileUrl,
+                    type: 'PROFILE_IMAGE'
+                };
+                this.userService.saveUploadUrl(payload).subscribe({
+                    next: () => {
+                        console.log('Upload complete');
+                        this.router.navigate(['/']);
+                        this.userService.loadUser();
+                    },
+                    error: (err) => console.error('Save URL failed:', err)
+                });
+            },
+            error: (err) => console.error('Upload failed:', err)
+        });
+}
 
 }
