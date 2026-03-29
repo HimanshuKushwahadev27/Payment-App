@@ -15,7 +15,7 @@ public class KycMapper {
   public Kyc getEntity(KycRequest request, UUID keycloakId){
     
     Kyc kyc = new Kyc();
-    kyc.setAdhaarNumber(request.adhaarNumber());
+    kyc.setAadhaarNumber(request.adhaarNumber());
     kyc.setCreatedAt(Instant.now());
     kyc.setOtpVerified(false);
     kyc.setPanNumber(request.panNumber());

@@ -39,16 +39,18 @@ public class KycController {
 	}
 
     @PostMapping("/otp/send")
-  public String sendOtp(@RequestParam String phone) {
+  public String sendOtp(@RequestParam("phone") Long phone) {
       otpService.sendOtp(phone);
       return "OTP sent successfully";
   }
 
   @PostMapping("/otp/verify")
-  public String verifyOtp(@RequestParam String phone,
-                          @RequestParam String otp) {
+  public String verifyOtp(
+    @AuthenticationPrincipal Jwt jwt,
+    @RequestParam("phone") Long phone,
+    @RequestParam("otp") String otp) {
 
-      otpService.verifyOtp(phone, otp);
+      otpService.verifyOtp(UUID.fromString(jwt.getSubject()), phone, otp);
       return "OTP verified successfully";
   }
 }

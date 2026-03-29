@@ -28,7 +28,7 @@ public class UserInfo {
 	private UUID keycloakId ;
 	
 	@Column(name="profile_image_url")
-	private String profileImgUrl;
+	private String profileImgUrl;		
 	
 	@Column(name="name", nullable=false)
 	private String name ;

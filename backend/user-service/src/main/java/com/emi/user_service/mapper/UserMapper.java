@@ -42,8 +42,14 @@ public class UserMapper {
 	public void updateUser(UserInfo user, String email, UserRequestUpdateDto request) {
 		user.setUpdatedAt(Instant.now());
 		user.setEmail(email);
-		user.setName(request.name());
-		user.setPhone(request.phone());
+
+		if(request.name()!=null){
+		 user.setName(request.name());
+		}
+
+		if(request.phone()!=null){
+			user.setPhone(request.phone());
+		}
 	}
 
 }

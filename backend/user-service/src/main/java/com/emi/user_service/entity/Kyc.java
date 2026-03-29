@@ -29,8 +29,8 @@ public class Kyc {
 	@Column(name="keycloak_id", unique=true, nullable=true)
   private UUID keycloakId;
 
-  @Column(name="adhaar_number", unique=true, nullable=true)
-  private String adhaarNumber;
+  @Column(name="aadhaar_number", unique=true, nullable=true)
+  private String aadhaarNumber;
 
   @Column(name="pan_number", unique=true, nullable=true)
   private String panNumber;
@@ -42,7 +42,7 @@ public class Kyc {
   private String selfieUrl;
 
   
-	@Column(name="type")
+	@Column(name="status")
 	@Enumerated(EnumType.STRING)
   private KYCSTATUS status;
 
