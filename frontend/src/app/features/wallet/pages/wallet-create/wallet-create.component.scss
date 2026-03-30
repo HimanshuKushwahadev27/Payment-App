@@ -1,0 +1,101 @@
+.create-user {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 80px 24px 24px 24px;
+  background: linear-gradient(135deg, #f3e5f5, #ede7f6, #e1bee7) !important;
+  box-sizing: border-box;
+}
+
+.create-card {
+  width: 400px;
+  max-width: 100%;
+  padding: 28px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 20px 50px rgba(156, 39, 176, 0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
+}
+
+.create-card h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #9c27b0;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.create-card button {
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px 16px;
+  font-size: 15px;
+  border-radius: 24px;
+  background-color: #9c27b0;
+  color: white;
+  transition: all 0.25s ease;
+
+  &:hover {
+    background-color: #7b1fa2;
+    box-shadow: 0 4px 15px rgba(156, 39, 176, 0.4);
+  }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .create-user {
+    padding: 70px 20px 20px 20px;
+  }
+
+  .create-card {
+    width: 100%;
+    padding: 20px 16px;
+    border-radius: 10px;
+  }
+
+  .create-card h2 {
+    font-size: 18px;
+    margin-bottom: 14px;
+  }
+
+  .create-card button {
+    font-size: 14px;
+    padding: 9px 14px;
+  }
+}
+
+@media (max-width: 400px) {
+  .create-user {
+    padding: 60px 16px 16px 16px;
+  }
+
+  .create-card {
+    padding: 16px 12px;
+    border-radius: 8px;
+  }
+
+  .create-card h2 {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .create-card button {
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+}

@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guard/auth-guard';
+import { walletGuard } from './core/guard/wallet-guard';
 
 export const routes: Routes =
 [
@@ -35,7 +36,23 @@ export const routes: Routes =
     canActivate: [authGuard],
     loadComponent: () => import('./features/users/pages/kyc/kyc.component').then(m => m.KycComponent)
   },
+  { 
+    path: 'home/wallet-create',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/wallet/pages/wallet-create/wallet-create.component').then(m => m.WalletCreateComponent)
+  },
 
+  { 
+    path: 'home/wallet-profile',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/wallet/pages/wallet-profile/wallet-profile.component').then(m => m.WalletProfileComponent)
+  },
+
+  { 
+    path: 'home/transfer',
+    canActivate: [authGuard, walletGuard],
+    loadComponent: () => import('./features/wallet/pages/transfer/transfer.component').then(m => m.TransferComponent)
+  },
 
 
 ];

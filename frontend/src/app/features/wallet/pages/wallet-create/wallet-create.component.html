@@ -1,0 +1,32 @@
+<div class="create-user">
+  <div class="create-card">
+
+    <h2>Create Wallet</h2>
+
+    <form [formGroup]="walletForm" (ngSubmit)="createWallet()">
+
+      <mat-form-field appearance="outline">
+        <mat-label>Account Type</mat-label>
+        <mat-select formControlName="type">
+          @for (type of accountTypes; track type) {
+            <mat-option [value]="type">{{ type }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Currency</mat-label>
+        <mat-select formControlName="currency">
+          @for (currency of currencies; track currency) {
+            <mat-option [value]="currency">{{ currency }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" type="submit">
+        Create Wallet
+      </button>
+
+    </form>
+  </div>
+</div>

@@ -4,9 +4,14 @@
 
 @if (authService.isAuthenticated()) {
 <div class="nav-actions">
-  <button mat-button class="nav-btn" >
+  <button mat-button class="nav-btn" [routerLink]="['home/wallet-profile']" >
       <mat-icon>account_balance_wallet</mat-icon>
     <span>My Wallet</span>
+  </button>
+
+  <button mat-button class="nav-btn" [routerLink]="['/home/transfer']" >
+      <mat-icon>payment</mat-icon>
+    <span>Pay</span>
   </button>
 
   <!-- PROFILE BUTTON -->
