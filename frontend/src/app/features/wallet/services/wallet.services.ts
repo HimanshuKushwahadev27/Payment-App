@@ -39,8 +39,8 @@ export class WalletServices {
 
   private http = inject(HttpClient);
 
-  getCurrentBalance(id: string): Observable<responseBalance>{
-    return this.http.get<responseBalance>(`/api/wallet/account/${id}`);
+  getCurrentBalance(accountId: string): Observable<responseBalance>{
+    return this.http.get<responseBalance>(`/api/wallet/account/${accountId}`);
   }
 
   createWalletAccount(request: createWallet): Observable<responseWallet>{

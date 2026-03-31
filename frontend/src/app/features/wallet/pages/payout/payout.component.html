@@ -1,0 +1,24 @@
+<div class="create-user">
+  <div class="create-card">
+
+    <h2>Setup Payout Account</h2>
+    <p class="subtitle">
+      You will be redirected to Stripe to securely add your bank account
+    </p>
+
+    <button mat-raised-button color="primary"
+            (click)="startOnboarding()"
+            [disabled]="loading">
+
+      <mat-icon>account_balance</mat-icon>
+
+      @if (loading) {
+        <mat-spinner diameter="20"></mat-spinner>
+      } @else {
+        <span>Continue with Stripe</span>
+      }
+
+    </button>
+
+  </div>
+</div>

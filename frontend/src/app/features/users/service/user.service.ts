@@ -4,9 +4,10 @@ import { Observable } from 'rxjs';
 
 export interface userProfile{
   id: string;
-  email: string;
   name: string;
   profileImgUrl: string;
+  email: string;
+  stripeAccountId :string;
   phone : number;
   status ?: string;
   createdAt: Date;

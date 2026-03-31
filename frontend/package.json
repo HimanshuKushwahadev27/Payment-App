@@ -20,6 +20,7 @@
     "@angular/material": "^21.2.3",
     "@angular/platform-browser": "^21.2.0",
     "@angular/router": "^21.2.0",
+    "@stripe/stripe-js": "^9.0.1",
     "angular-oauth2-oidc": "^20.0.2",
     "crypto": "^1.0.1",
     "ngx-toastr": "^20.0.5",

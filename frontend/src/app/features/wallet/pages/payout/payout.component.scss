@@ -1,0 +1,111 @@
+.create-user {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 80px 24px 24px 24px;
+  background: linear-gradient(135deg, #f3e5f5, #ede7f6, #e1bee7) !important;
+  box-sizing: border-box;
+}
+
+.create-card {
+  width: 420px;
+  max-width: 100%;
+  padding: 28px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 20px 50px rgba(156, 39, 176, 0.25);
+  box-sizing: border-box;
+}
+
+.create-card h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #9c27b0;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: #9e9e9e;
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.checkbox-row {
+  margin: 8px 0;
+
+  ::ng-deep .mat-mdc-checkbox.mat-primary {
+    --mdc-checkbox-selected-focus-icon-color: #9c27b0;
+    --mdc-checkbox-selected-hover-icon-color: #9c27b0;
+    --mdc-checkbox-selected-icon-color: #9c27b0;
+    --mdc-checkbox-selected-pressed-icon-color: #9c27b0;
+  }
+}
+
+.create-card button {
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px 16px;
+  font-size: 15px;
+  border-radius: 24px;
+  background-color: #9c27b0 !important;
+  color: white !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+
+  &:hover:not([disabled]) {
+    background-color: #7b1fa2 !important;
+    box-shadow: 0 4px 15px rgba(156, 39, 176, 0.4);
+  }
+
+  &[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+mat-spinner {
+  --mdc-circular-progress-active-indicator-color: white;
+}
+
+@media (max-width: 600px) {
+  .create-user {
+    padding: 70px 20px 20px 20px;
+  }
+
+  .create-card {
+    width: 100%;
+    padding: 20px 16px;
+  }
+
+  .create-card h2 {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 400px) {
+  .create-user {
+    padding: 60px 16px 16px 16px;
+  }
+
+  .create-card {
+    padding: 16px 12px;
+  }
+}

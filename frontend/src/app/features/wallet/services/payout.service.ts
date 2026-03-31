@@ -1,20 +1,16 @@
-import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable, signal } from '@angular/core';
+import { Observable } from 'rxjs';
 
-
-export interface createPayoutAccount{
-  destinationAccountId: string,
-  bankName: string,
-  last4: string,
-  isDefault: boolean
-}
 
 export interface payoutResponse{
   id: string,
   userKeycloakId: string,
-  destinationAccountId : string,
+  stripeAccountId: string,
+  chargesEnabled: string,
+  payoutsEnabled: string,
   bankName: string  ,
   last4: string,
-  isDefault: string,
   createdAt: string,
   updatedAt: string
 }
@@ -24,6 +20,17 @@ export interface payoutResponse{
 })
 export class PayoutService {
 
+  private http = inject(HttpClient);
+  currentPayoutAccount = signal<payoutResponse | null>(null);
+
   
 
+  getStatus(): Observable<payoutResponse>{
+    return this.http.get<payoutResponse>('/api/wallet/stored_accounts/status');
+  }
+
+  getOnboardingLink(): Observable<string> {
+  return this.http.get('/api/wallet/stored_accounts/onboarding-link', { responseType: 'text' });
+  }
 }
+

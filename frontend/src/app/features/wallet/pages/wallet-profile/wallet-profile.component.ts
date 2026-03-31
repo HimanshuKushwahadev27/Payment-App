@@ -4,7 +4,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { DatePipe, CurrencyPipe } from '@angular/common';
-import { NgClass } from '@angular/common';
 import { UserService } from '../../../users/service/user.service';
 @Component({
   selector: 'app-wallet-profile',
@@ -14,8 +13,7 @@ import { UserService } from '../../../users/service/user.service';
       MatButtonModule,
       RouterLink,
       DatePipe,
-      CurrencyPipe,
-      NgClass
+      CurrencyPipe
   ],
   templateUrl: './wallet-profile.component.html',
   styleUrl: './wallet-profile.component.scss',
