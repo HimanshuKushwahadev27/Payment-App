@@ -13,4 +13,5 @@ public interface UserRepo extends JpaRepository<UserInfo, UUID> {
 
 	Optional<UserInfo> findByKeycloakId(UUID keycloakId);
 
+
 }

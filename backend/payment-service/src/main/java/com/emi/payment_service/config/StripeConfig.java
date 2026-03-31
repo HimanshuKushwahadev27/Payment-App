@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class StripeConfig {
 
-	@Value("${stripe-secret-key}")
+	@Value("${stripe.secret.key}")
 	private String secretKey;
 	
 	@Bean

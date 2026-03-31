@@ -6,11 +6,13 @@ import java.util.UUID;
 public record PayoutAccountResponse(
         UUID id,
         UUID userKeycloakId,
-        String destinationAccountId,
+        String stripeAccountId,
+        Boolean chargesEnabled,
+        Boolean payoutsEnabled,
         String bankName,
         String last4,
-        boolean isDefault,
         Instant createdAt,
-        Instant updatedAt) {
+        Instant updatedAt
+) {
 
 }

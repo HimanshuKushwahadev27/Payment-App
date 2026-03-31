@@ -117,6 +117,7 @@ public class UserServiceImpl implements UserService {
 		return userRepo.findByKeycloakId(keycloakId)
 		.map(UserInfo::getStripeAccountId)
 		.orElseThrow(() -> new UserExistsException("User not found"));
-	}	
+	}
+
 
 }

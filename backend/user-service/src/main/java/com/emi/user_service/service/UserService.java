@@ -18,5 +18,4 @@ public interface UserService {
 	public String getEmail(UUID userId);
 	public void saveImageUrl(String imgUrl, UUID keycloakId);
   public String getStripeAccountId(UUID keycloakId);
-
 }

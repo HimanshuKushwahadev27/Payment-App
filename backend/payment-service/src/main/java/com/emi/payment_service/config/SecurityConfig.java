@@ -8,7 +8,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -32,7 +31,7 @@ public class SecurityConfig {
 		return http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/public/**").permitAll()
+                    .requestMatchers("/api/payment/webhook").permitAll()
                     .anyRequest().authenticated()
 			)
 			.oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()))
@@ -41,10 +40,10 @@ public class SecurityConfig {
 	}
 	
 	
-    @Bean
-     ObjectMapper objectMapper() {
-        return new ObjectMapper();
-    }
+	@Bean
+		ObjectMapper objectMapper() {
+			return new ObjectMapper();
+	}
     
     
  	@Bean

@@ -26,7 +26,7 @@ public class StripeService {
     try{
         Map<String, Object> params = new HashMap<>();
         params.put("type", "custom");
-        params.put("country", "IN");
+        params.put("country", "US");
         params.put("email", email);
         params.put("capabilities", Map.of(
             "transfers", Map.of("requested", true)
@@ -37,7 +37,8 @@ public class StripeService {
         log.info("Stripe Connect account created: {}", account.getId());
         return account.getId();
     }catch(StripeException ex){
-        log.error("Failed to create Stripe Connect account: {}", ex.getMessage());
+        log.error("Failed to create Stripe Connect account: {}", ex);
+
         throw new RuntimeException("Stripe account creation failed: " + ex.getMessage());
     }
   }

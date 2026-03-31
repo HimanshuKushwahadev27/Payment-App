@@ -31,17 +31,17 @@ public class User_Payout_Account {
     private UUID userKeycloakId;
 
 
-    @Column(name = "destination_account_id", nullable = false, unique = true)
-    private String destinationAccountId;
+    @Column(name = "stripe_account_id", nullable = false, unique = true)
+    private String stripeAccountId;
 
-    @Column(name = "bank_name")
-    private String bankName;
+    @Column(name = "charges_enabled")
+    private boolean chargesEnabled;
 
-    @Column(name = "last4")
-    private String last4;
+    @Column(name = "payout_enabled")
+    private boolean payoutsEnabled;
 
-    @Column(name = "is_default")
-    private boolean isDefault;
+    @Column(name = "details_submitted")
+    private boolean detailsSubmitted;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;

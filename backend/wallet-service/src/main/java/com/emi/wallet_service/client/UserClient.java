@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface UserClient {
   
   
-	@GetMapping("api/user/stripe-account/{keycloakId}")
-	public String getEmail(@PathVariable("keycloakId") UUID keycloakId);
+	@GetMapping("/api/user/stripe-account/{keycloakId}")
+	public String getStripeId(@PathVariable("keycloakId") UUID keycloakId);
+
 }
