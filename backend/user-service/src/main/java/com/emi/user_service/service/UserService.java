@@ -17,5 +17,6 @@ public interface UserService {
 	public UserResponseDto updateUser(UserRequestUpdateDto request, String email, UUID keycloakId);
 	public String getEmail(UUID userId);
 	public void saveImageUrl(String imgUrl, UUID keycloakId);
+  public String getStripeAccountId(UUID keycloakId);
 
 }

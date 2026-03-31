@@ -81,17 +81,16 @@ public class LedgerServiceImpl implements LedgerService {
 
 	@Override
 	public LedgerResponseDto getUsersRecord(UUID transaction_Id) {
-		LedgerEntry event = ledgerRepo
+		return ledgerRepo
 				.findByTransactionId(transaction_Id)
+				.map(ledgerMapper:: toDto)
 				.orElseThrow(() -> new LedgerNotFoundException("ledger not exists for the given transaction"));
-	
-		return ledgerMapper.toDto(event);
 	}
 
 	@Override
 	public void updateLedgerPayoutFailure(TransactionEvent event) {
 		if(event.getTransactionStatus()!= TransactionStatus.SUCCESS) {
-			throw new IllegalArgumentException("Transactiob not completed yet");
+			throw new IllegalArgumentException("Transaction not completed yet");
 		}
 		
 		

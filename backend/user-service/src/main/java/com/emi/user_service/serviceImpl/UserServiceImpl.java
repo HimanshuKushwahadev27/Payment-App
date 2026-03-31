@@ -27,7 +27,8 @@ public class UserServiceImpl implements UserService {
 	private final Keycloak keycloak;
 	private final UserMapper userMapper;
 	private final UserRepo userRepo;
-	
+	private final StripeService stripeService;
+
 	@Override
 	public UserResponseDto createUser(UserRequestCreateDto request, UUID keycloakId, String email) {
 		if(userRepo.existsByKeycloakId(keycloakId)) {
@@ -35,6 +36,9 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		var user = userMapper.getEntity(request, keycloakId, email);
+
+		String stripeAccId = stripeService.createConnectAccount(email);
+		user.setStripeAccountId(stripeAccId);
 		userRepo.save(user);
 		
 		return userMapper.toDto(user);
@@ -106,6 +110,13 @@ public class UserServiceImpl implements UserService {
 	user.setProfileImgUrl(imgUrl);
 	user.setUpdatedAt(Instant.now());
 	userRepo.save(user);
+	}
+
+	@Override
+	public String getStripeAccountId(UUID keycloakId) {
+		return userRepo.findByKeycloakId(keycloakId)
+		.map(UserInfo::getStripeAccountId)
+		.orElseThrow(() -> new UserExistsException("User not found"));
 	}	
 
 }

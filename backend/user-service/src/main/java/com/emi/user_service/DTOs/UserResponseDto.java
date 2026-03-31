@@ -10,6 +10,7 @@ public record UserResponseDto(
 		String name,
 		String profileImgUrl,
 		String email,
+	  String stripeAccountId,
 		Long phone,
 		KYCSTATUS status,
 		Instant createdAt

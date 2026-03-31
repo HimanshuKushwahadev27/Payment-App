@@ -78,5 +78,11 @@ public class UserController {
 	public String getEmail(@PathVariable UUID id) {
 	    return userService.getEmail(id);
 	}
+
+
+	@GetMapping("/stripe-account/{keycloakId}")
+	public ResponseEntity<String> getStripeAccountId(UUID keycloakId) {
+			return ResponseEntity.ok(userService.getStripeAccountId(keycloakId));
+	}
 }
 

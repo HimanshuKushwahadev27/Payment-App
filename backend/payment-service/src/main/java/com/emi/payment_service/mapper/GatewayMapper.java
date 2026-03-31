@@ -40,12 +40,11 @@ public class GatewayMapper {
 	    };
     }
 
-	public GatewayPaymentRequest getRequest(Payments payment, UUID idempotencyKey, String id) {
+	public GatewayPaymentRequest getRequest(Payments payment, UUID idempotencyKey) {
 		return new GatewayPaymentRequest(
 				payment.getAmount(),
 				idempotencyKey.toString(),
-				payment.getCurrency(),
-				id
+				payment.getCurrency()
 				);
 	}
 

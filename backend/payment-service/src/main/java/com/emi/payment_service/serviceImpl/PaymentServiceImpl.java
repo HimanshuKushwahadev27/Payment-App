@@ -13,7 +13,6 @@ import com.emi.payment_service.RequestDtos.GatewayPayoutRequest;
 import com.emi.payment_service.RequestDtos.RequestPaymentDto;
 import com.emi.payment_service.RequestDtos.RequestWithdrawDto;
 import com.emi.payment_service.ResponseDtos.GatewayResponse;
-import com.emi.payment_service.ResponseDtos.ResponsePaymentDto;
 import com.emi.payment_service.entity.IdempotencyRecord;
 import com.emi.payment_service.entity.Payments;
 import com.emi.payment_service.enums.IdempotencyStatus;
@@ -54,7 +53,7 @@ public class PaymentServiceImpl implements PaymentService {
 	private final PaymentEventGeneration eventGeneration;
 	
 	@Override
-	public ResponsePaymentDto charge(RequestPaymentDto request, UUID idempotencyKey, UUID keycloakId) {
+	public String createIntent(RequestPaymentDto request, UUID idempotencyKey, UUID keycloakId) {
 		IdempotencyRecord idempotency = idempMapper.getEntity(request, idempotencyKey, keycloakId);
 
 		try {
@@ -65,7 +64,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 			if (existing.getStatus() == IdempotencyStatus.COMPLETED) {
 				try {
-					return objectMapper.readValue(existing.getResponseBody(), ResponsePaymentDto.class);
+					return objectMapper.readValue(existing.getResponseBody(), String.class);
 				} catch (JsonProcessingException e) {
 					throw new RuntimeException("Failed to deserialize JSON", e);
 				}
@@ -76,16 +75,16 @@ public class PaymentServiceImpl implements PaymentService {
 		Payments payment = paymentMapper.toEntity(request, keycloakId);
 		paymentRepo.save(payment);
 
-		GatewayPaymentRequest gatewayRequest = gatewayMapper.getRequest(payment, idempotencyKey, request.paymentMethodId());
+		GatewayPaymentRequest gatewayRequest = gatewayMapper.getRequest(payment, idempotencyKey);
 		GatewayResponse gatewayResponse = paymentGateway.charge(gatewayRequest);
 		
 		payment.setGatewayTransactionId(gatewayResponse.transactionId());
-		ResponsePaymentDto response = paymentMapper.toDto(payment, gatewayResponse.client_secret());
+		paymentRepo.save(payment);
 
-		idempMapper.updateIdemp(idempotency, response);
+		idempMapper.updateIdemp(idempotency, gatewayResponse.client_secret());
 		idempRepo.save(idempotency);
 		
-		return response;
+		return gatewayResponse.client_secret();
 	}
 
 	@Override
@@ -96,7 +95,7 @@ public class PaymentServiceImpl implements PaymentService {
 		
 		
 		GatewayPayoutRequest gatewayRequest = gatewayMapper.getRequestPayout(payment, idempotencyKey, request.destinationAccountId());
-		GatewayResponse gatewayResponse = paymentGateway.payout(gatewayRequest);
+		GatewayResponse gatewayResponse = paymentGateway.payout(gatewayRequest, keycloakId);
 		
 		payment.setGatewayTransactionId(gatewayResponse.transactionId());
 
@@ -104,7 +103,7 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 
 	@Override
-	public ResponsePaymentDto cancelPayment(String transactionId) {
+	public String cancelPayment(String transactionId) {
 		// TODO Auto-generated method stub
 		return null;
 	}

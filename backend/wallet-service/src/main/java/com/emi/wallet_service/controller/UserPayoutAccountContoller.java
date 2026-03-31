@@ -9,17 +9,17 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.emi.wallet_service.RequestDtos.CreatePayoutAccountRequest;
-import com.emi.wallet_service.RequestDtos.UpdatePayoutAccountRequest;
+import com.emi.wallet_service.RequestDtos.BankTokenRequest;
 import com.emi.wallet_service.ResponseDto.PayoutAccountResponse;
 import com.emi.wallet_service.service.UserPayoutAccountService;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -31,13 +31,6 @@ public class UserPayoutAccountContoller {
 	
 	private final UserPayoutAccountService accountService;
 	
-	@PostMapping("/create")
-	ResponseEntity<PayoutAccountResponse> create(
-			@RequestBody @Valid CreatePayoutAccountRequest request,
-			@AuthenticationPrincipal Jwt  jwt,
-			@RequestHeader("Idempotency-key") UUID idempotencyKey){
-		return ResponseEntity.ok(accountService.create(request, idempotencyKey, UUID.fromString(jwt.getSubject())));
-	}
 	
 	@GetMapping("/account")
 	ResponseEntity<List<PayoutAccountResponse>> getUsersAccount(@AuthenticationPrincipal Jwt  jwt){
@@ -48,16 +41,9 @@ public class UserPayoutAccountContoller {
 	ResponseEntity<PayoutAccountResponse> getDefaultAccount(@AuthenticationPrincipal Jwt  jwt) {
 		return ResponseEntity.ok(accountService.getDefaultAccount(UUID.fromString(jwt.getSubject())));
     }
-
-	@PatchMapping("/update")
-	ResponseEntity<PayoutAccountResponse> update(
-    		@AuthenticationPrincipal Jwt  jwt,
-    		@RequestBody @Valid UpdatePayoutAccountRequest request) {
-    	return ResponseEntity.ok(accountService.update(UUID.fromString(jwt.getSubject()), request));
-    }
     
     @DeleteMapping("/delete/{id}")
-    void delete(UUID id) {
+    void delete(@PathVariable UUID id) {
     	accountService.delete(id);
     }
 
@@ -65,4 +51,14 @@ public class UserPayoutAccountContoller {
     void setDefault(@AuthenticationPrincipal Jwt  jwt, UUID accountId) {
 		accountService.setDefault(UUID.fromString(jwt.getSubject()), accountId);
 	}
+
+		@PostMapping("/bank-details")
+		ResponseEntity<PayoutAccountResponse> storeDetails(
+				  @RequestBody @Valid BankTokenRequest request,
+					@AuthenticationPrincipal Jwt jwt,
+					@RequestHeader("Idempotency-key") UUID idempotencyKey) {
+			return ResponseEntity.ok(
+					accountService.storeBankDetails(request, idempotencyKey, UUID.fromString(jwt.getSubject()))
+			);
+   }
 }

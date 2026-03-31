@@ -1,5 +1,6 @@
 package com.emi.payment_service.controller;
 
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.emi.payment_service.RequestDtos.RequestPaymentDto;
-import com.emi.payment_service.ResponseDtos.ResponsePaymentDto;
 import com.emi.payment_service.service.PaymentService;
 
 import jakarta.validation.Valid;
@@ -26,18 +26,18 @@ public class PaymentController {
 	 private final PaymentService paymentService;
 	
 	@PostMapping("/charge")
-	public ResponseEntity<ResponsePaymentDto> charge(
+	public ResponseEntity<Map<String, String>> charge(
 			@RequestBody @Valid RequestPaymentDto request,
 			@AuthenticationPrincipal Jwt jwt,
 			@RequestHeader("Idempotency-Key") String IdempotencyKey){
 		
-		return ResponseEntity.ok(
-				paymentService.charge(
+		String clientId = 
+				paymentService.createIntent(
 						request,
 						UUID.fromString(IdempotencyKey), 
 						UUID.fromString(jwt.getSubject())
-						)
-				);
+						);
+			return ResponseEntity.ok(Map.of("clientSecret", clientId ));
 	}
 	
 	@PostMapping("/webhook")

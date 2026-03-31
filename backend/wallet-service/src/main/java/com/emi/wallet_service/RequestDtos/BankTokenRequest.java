@@ -1,12 +1,16 @@
 package com.emi.wallet_service.RequestDtos;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 public record BankTokenRequest(
 
-   @NotNull
-   String token,
-   boolean isDefault
+    @NotBlank
+     String accountHolderName,
+    @NotBlank
+     String ifscCode,
+    @NotBlank
+     String accountNumber,
+     boolean isDefault
 
 ) {
   

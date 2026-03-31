@@ -30,6 +30,9 @@ public class UserInfo {
 	@Column(name="profile_image_url")
 	private String profileImgUrl;		
 	
+	@Column(name="stripe_account_id")
+	private String stripeAccountId;
+
 	@Column(name="name", nullable=false)
 	private String name ;
 	

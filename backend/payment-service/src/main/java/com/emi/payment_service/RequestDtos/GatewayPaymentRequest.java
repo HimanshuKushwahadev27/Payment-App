@@ -37,13 +37,5 @@ public record GatewayPaymentRequest(
         )
         @NotBlank
         @Pattern(regexp = "^[A-Z]{3}$")
-        String currency,
-
-        @NotBlank
-        @Schema(
-            description = "Stripe payment method ID generated on frontend",
-            example = "pm_1NqgR7A9abcd123"
-        )
-        String paymentMethodId
-
+        String currency
 ) {}

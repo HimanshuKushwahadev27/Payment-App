@@ -7,7 +7,6 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import com.emi.payment_service.RequestDtos.RequestPaymentDto;
-import com.emi.payment_service.ResponseDtos.ResponsePaymentDto;
 import com.emi.payment_service.entity.IdempotencyRecord;
 import com.emi.payment_service.enums.IdempotencyStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -36,7 +35,7 @@ public class IdempotencyMapper {
 		return idempotency;
 	}
 	
-	public void updateIdemp(IdempotencyRecord idempotency, ResponsePaymentDto response) {
+	public void updateIdemp(IdempotencyRecord idempotency, String response) {
 		String responseString = "";
 		try {
 		 responseString = objectMapper.writeValueAsString(response);

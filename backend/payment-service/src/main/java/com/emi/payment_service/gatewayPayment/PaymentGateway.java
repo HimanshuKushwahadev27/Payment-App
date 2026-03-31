@@ -1,5 +1,7 @@
 package com.emi.payment_service.gatewayPayment;
 
+import java.util.UUID;
+
 import com.emi.payment_service.RequestDtos.GatewayPaymentRequest;
 import com.emi.payment_service.RequestDtos.GatewayPayoutRequest;
 import com.emi.payment_service.RequestDtos.GatewayRefundRequest;
@@ -13,6 +15,6 @@ public interface PaymentGateway {
 
     GatewayResponse cancelPayment(String transactionId);
     
-    GatewayResponse payout(GatewayPayoutRequest request);
+    GatewayResponse payout(GatewayPayoutRequest request, UUID userId);
 
 }

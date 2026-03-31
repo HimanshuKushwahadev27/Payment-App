@@ -3,8 +3,8 @@ package com.emi.wallet_service.service;
 import java.util.List;
 import java.util.UUID;
 
+import com.emi.wallet_service.RequestDtos.BankTokenRequest;
 import com.emi.wallet_service.RequestDtos.CreatePayoutAccountRequest;
-import com.emi.wallet_service.RequestDtos.UpdatePayoutAccountRequest;
 import com.emi.wallet_service.ResponseDto.PayoutAccountResponse;
 
 public interface UserPayoutAccountService {
@@ -14,9 +14,9 @@ public interface UserPayoutAccountService {
 	List<PayoutAccountResponse> getUsersAccount(UUID userId);
 	
     PayoutAccountResponse getDefaultAccount(UUID userId);
-
-    PayoutAccountResponse update(UUID id, UpdatePayoutAccountRequest request);
     
+    PayoutAccountResponse storeBankDetails(BankTokenRequest request, UUID idempotencyKey, UUID userId);
+
     
     void delete(UUID id);
 

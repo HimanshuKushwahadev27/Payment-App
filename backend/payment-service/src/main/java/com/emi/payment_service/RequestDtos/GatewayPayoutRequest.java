@@ -44,7 +44,6 @@ public record GatewayPayoutRequest(
             example = "pm_1NqgR7A9abcd123"
         )
         String destinationAccountId,
-        
 
         @NotBlank(message = "Idempotency key is required")
         @Size(max = 100, message = "Idempotency key must not exceed 100 characters")

@@ -22,7 +22,7 @@ public class LedgerController {
 	private final LedgerService ledgerService;
 	
 	@GetMapping("/{transactionId}")
-	public ResponseEntity<LedgerResponseDto> getBalance(
+	public ResponseEntity<LedgerResponseDto> getUsersRecord(
 			@PathVariable UUID transactionId) {
 		return ResponseEntity.ok(ledgerService.getUsersRecord(transactionId));
 		

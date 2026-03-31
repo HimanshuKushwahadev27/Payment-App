@@ -33,6 +33,7 @@ public class UserMapper {
 				user.getName(),
 				user.getProfileImgUrl(),
 				user.getEmail()	,
+				user.getStripeAccountId(),
 				user.getPhone(),
 				user.getKycStatus(),
 				user.getCreatedAt()

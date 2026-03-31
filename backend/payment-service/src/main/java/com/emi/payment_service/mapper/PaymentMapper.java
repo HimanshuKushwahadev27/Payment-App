@@ -12,7 +12,6 @@ import com.emi.events.payment.PaymentType;
 import com.emi.events.transactions.TransactionEvent;
 import com.emi.payment_service.RequestDtos.RequestPaymentDto;
 import com.emi.payment_service.RequestDtos.RequestWithdrawDto;
-import com.emi.payment_service.ResponseDtos.ResponsePaymentDto;
 import com.emi.payment_service.entity.Payments;
 
 @Component
@@ -32,19 +31,6 @@ public class PaymentMapper {
 		return payment;
 	}
 
-	public ResponsePaymentDto toDto(Payments payment, String secret) {
-		return new ResponsePaymentDto(
-				payment.getId(),
-				payment.getAmount(),
-				payment.getStatus(),
-				payment.getGatewayTransactionId().toString(),
-				payment.getCreatedAt(),
-				payment.getCurrency(),
-				payment.getPaymentMethodType(),
-				secret
-		)
-				;
-	}
 
 	public Payments toEntityWithdraw(RequestWithdrawDto request, UUID keycloakId) {
 		Payments payment = new Payments();

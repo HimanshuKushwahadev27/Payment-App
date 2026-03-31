@@ -1,16 +1,18 @@
 package com.emi.wallet_service.serviceImpl;
 
-import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-
+import com.emi.wallet_service.RequestDtos.BankTokenRequest;
 import com.emi.wallet_service.RequestDtos.CreatePayoutAccountRequest;
-import com.emi.wallet_service.RequestDtos.UpdatePayoutAccountRequest;
 import com.emi.wallet_service.ResponseDto.PayoutAccountResponse;
+import com.emi.wallet_service.client.UserClient;
 import com.emi.wallet_service.entity.IdempotencyKeys;
 import com.emi.wallet_service.entity.User_Payout_Account;
 import com.emi.wallet_service.enums.IdempotencyStatus;
@@ -21,6 +23,11 @@ import com.emi.wallet_service.repositories.UserPayoutRepo;
 import com.emi.wallet_service.service.UserPayoutAccountService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.Account;
+import com.stripe.model.BankAccount;
+import com.stripe.model.ExternalAccount;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,7 +40,10 @@ public class UserPayoutAccountServiceImpl implements UserPayoutAccountService{
 	private final UserPayoutRepo payoutRepo;
 	private final UserPayoutMapper userPayoutMapper;
 	private final ObjectMapper objectMapper ;
+	private final UserClient userClient;
 
+	@Value("${stripe.secret.key}")
+	private String stripeSecretKey;
 	
 	@Override
 	public PayoutAccountResponse create(CreatePayoutAccountRequest request,UUID idempotencyKey,  UUID userKeycloakId) {
@@ -87,26 +97,6 @@ public class UserPayoutAccountServiceImpl implements UserPayoutAccountService{
 	}
 
 	@Override
-	public PayoutAccountResponse update(UUID id, UpdatePayoutAccountRequest request) {
-        User_Payout_Account entity = payoutRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Account not found"));
-
-
-        if (request.bankName() != null) {
-            entity.setBankName(request.bankName());
-        }
-
-        if (request.isDefault() != null && request.isDefault()) {
-            setDefault(entity.getUserKeycloakId(), entity.getId());
-        }
-
-        entity.setUpdatedAt(Instant.now());
-        payoutRepo.save(entity);
-        
-        return userPayoutMapper.toDto(entity);
-	}
-
-	@Override
 	public void delete(UUID id) {
 		payoutRepo.deleteById(id);
 	}
@@ -122,4 +112,43 @@ public class UserPayoutAccountServiceImpl implements UserPayoutAccountService{
         payoutRepo.saveAll(accounts);
 	}
 
+
+	@Override
+	public PayoutAccountResponse storeBankDetails(BankTokenRequest request, UUID idempotencyKey, UUID userId) {
+
+			Stripe.apiKey = stripeSecretKey;
+
+		try{
+
+			String 	accId = userClient.getEmail(userId);
+
+			Map<String, Object> params = new HashMap<>();
+				params.put("object", "bank_account");
+        params.put("country", "IN");
+        params.put("currency", "inr");
+        params.put("account_holder_name", request.accountHolderName());
+        params.put("account_holder_type", "individual");
+        params.put("routing_number", request.ifscCode()); 
+        params.put("account_number", request.accountNumber());
+
+				Map<String, Object> externalAccountParams = new HashMap<>();
+        externalAccountParams.put("external_account", params);
+
+				ExternalAccount externalAccount = Account.retrieve(accId).getExternalAccounts().create(externalAccountParams);
+
+				BankAccount bankAccount = (BankAccount)externalAccount;
+
+				  CreatePayoutAccountRequest payoutRequest =  new CreatePayoutAccountRequest(
+						bankAccount.getId(),
+						bankAccount.getBankName(),
+						bankAccount.getLast4(),
+						request.isDefault()
+					);
+
+			return create(payoutRequest, idempotencyKey, userId);
+
+		}catch(StripeException ex){
+			throw new RuntimeException("Stripe error: " + ex.getMessage());
+		}
+	 }
 }
