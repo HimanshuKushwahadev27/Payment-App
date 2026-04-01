@@ -1,4 +1,5 @@
 import { HttpInterceptorFn } from '@angular/common/http';
+import { v4 as uuidv4 } from 'uuid';
 
 export const idempotencyInterceptor: HttpInterceptorFn = (req, next) => {
 
@@ -9,7 +10,7 @@ export const idempotencyInterceptor: HttpInterceptorFn = (req, next) => {
 
     const cloned = req.clone({
       setHeaders: {
-        'Idempotency-Key': Date.now().toString()
+        'Idempotency-Key': uuidv4()
       }
     });
 

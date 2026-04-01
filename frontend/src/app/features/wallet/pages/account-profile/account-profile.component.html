@@ -1,1 +1,73 @@
-<p>account-profile works!</p>
+@if (payout()) {
+  <div class="payout-card">
+
+    <div class="left">
+      <div class="icon">
+        <mat-icon>account_balance</mat-icon>
+      </div>
+
+      <div class="details">
+        <h3>Payout Account</h3>
+
+        @if (payout()?.bankName) {
+          <p class="bank">
+            {{ payout()?.bankName }} •••• {{ payout()?.last4 }}
+          </p>
+        } @else {
+          <p class="bank pending">
+            No bank account connected
+          </p>
+        }
+
+        <div class="meta">
+          <span>
+            Created {{ payout()?.createdAt | date:'MMM yyyy' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="right">
+
+      <!-- STATUS BADGE -->
+      <div 
+        class="status"
+        [ngClass]="{
+          'success': payout()?.payoutsEnabled,
+          'pending': !payout()?.payoutsEnabled && payout()?.chargesEnabled,
+          'restricted': !payout()?.chargesEnabled
+        }"
+      >
+        <mat-icon>
+          {{ payout()?.payoutsEnabled ? 'check_circle' : 'schedule' }}
+        </mat-icon>
+
+        <span>
+          {{
+            payout()?.payoutsEnabled
+              ? 'READY'
+              : payout()?.chargesEnabled
+              ? 'PENDING'
+              : 'RESTRICTED'
+          }}
+        </span>
+      </div>
+
+      <!-- ACTION BUTTON -->
+      <button 
+        mat-raised-button 
+        color="primary"
+        (click)="startOnboarding()"
+      >
+        <mat-icon>edit</mat-icon>
+        {{ payout()?.bankName ? 'Update Bank' : 'Add Bank' }}
+      </button>
+
+    </div>
+
+  </div>
+} @else {
+  <div class="loading">
+    Loading payout info...
+  </div>
+}

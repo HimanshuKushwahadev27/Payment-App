@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -8,6 +8,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PayoutService } from '../../services/payout.service';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-payout',
@@ -24,15 +25,22 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './payout.component.html',
   styleUrl: './payout.component.scss',
 })
-export class PayoutComponent {
+export class PayoutComponent implements OnInit{
 
+  ngOnInit(): void {
+    if (this.payoutService.currentPayoutAccount()) {
+      this.goToProfile();
+    }
+  }
+
+  private router = inject(Router);
   private payoutService = inject(PayoutService);
 
   private toastr = inject(ToastrService);
 
   loading = false ;
 
-    startOnboarding() {
+  startOnboarding() {
     this.loading = true;
 
     this.payoutService.getOnboardingLink().subscribe({
@@ -46,5 +54,8 @@ export class PayoutComponent {
     });
   }
 
+  goToProfile() {
+  this.router.navigate(['/home/account-profile']);
+  }
 
 }

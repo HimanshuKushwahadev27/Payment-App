@@ -14,7 +14,7 @@ target/
 Thumbs.db
 
 # Environment files
-.env
+**/.env
 
 # Build
 *.class
