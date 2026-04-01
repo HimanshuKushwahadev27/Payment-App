@@ -53,7 +53,7 @@ public class WalletController {
 	
 	@GetMapping("/{accountId}")
 	public ResponseEntity<ReponseBalanceDto> getBalance(
-			@PathVariable UUID accountId,
+			@PathVariable("accountId") UUID accountId,
 			@AuthenticationPrincipal Jwt jwt) {
 		return ResponseEntity.ok(walletService.getBalance(accountId, UUID.fromString(jwt.getSubject())));
 		

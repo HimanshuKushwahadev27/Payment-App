@@ -7,7 +7,6 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import com.emi.wallet_service.RequestDtos.CreateAccountDto;
-import com.emi.wallet_service.RequestDtos.CreatePayoutAccountRequest;
 import com.emi.wallet_service.ResponseDto.PayoutAccountResponse;
 import com.emi.wallet_service.entity.IdempotencyKeys;
 import com.emi.wallet_service.enums.IdempotencyStatus;
@@ -37,21 +36,6 @@ public class IdempotencyMapper {
 		return idempotency;
 	}
 
-
-	public IdempotencyKeys toEntityPayoutAccount(CreatePayoutAccountRequest request, UUID idempotencyKey,
-			UUID userKeycloakId) {
-		IdempotencyKeys idempotency = new IdempotencyKeys();
-		String hashedRequest = String.valueOf(request.hashCode());
-		
-		idempotency.setIdempotencyKey(idempotencyKey);
-		idempotency.setCreatedAt(Instant.now());
-		idempotency.setUpdatedAt(Instant.now());
-		idempotency.setUserKeycloakId(userKeycloakId);
-		idempotency.setStatus(IdempotencyStatus.IN_PROGRESS);
-		idempotency.setRequestHash(hashedRequest);
-		
-		return idempotency;
-	}
 
 
 	public void updateIdemp(IdempotencyKeys idempotency, PayoutAccountResponse dto) {

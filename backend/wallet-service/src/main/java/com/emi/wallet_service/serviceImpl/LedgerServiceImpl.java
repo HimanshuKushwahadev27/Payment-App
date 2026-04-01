@@ -19,6 +19,7 @@ import com.emi.wallet_service.repositories.LedgerRepo;
 import com.emi.wallet_service.repositories.ProcessedEventRepo;
 import com.emi.wallet_service.service.LedgerService;
 import com.emi.wallet_service.service.UserPayoutAccountService;
+import com.stripe.exception.StripeException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -59,7 +60,7 @@ public class LedgerServiceImpl implements LedgerService {
 	}
 
 	@Override
-	public void updateLedgerDeposit(TransactionEvent event) {
+	public void updateLedgerDeposit(TransactionEvent event) throws StripeException{
 		
 		if(event.getTransactionStatus()!= TransactionStatus.SUCCESS) {
 			throw new IllegalArgumentException("Transactiob not completed yet");
@@ -74,13 +75,14 @@ public class LedgerServiceImpl implements LedgerService {
 		processedEventRepo.save(processed);
 		
 		UUID userId = UUID.fromString((String)event.getUserKeycloakId());
-		PayoutAccountResponse account = payoutAccountService.getDefaultAccount(userId);
+		PayoutAccountResponse account = payoutAccountService.getStripeStatus(userId);
 		LedgerEntry entry = ledgerMapper.toEntityDeposit(event,account);
 		ledgerRepo.save(entry);
 	}
 
 	@Override
-	public LedgerResponseDto getUsersRecord(UUID transaction_Id) {
+	public LedgerResponseDto getUsersRecord(UUID transaction_Id, UUID userKeycloakId) {
+
 		return ledgerRepo
 				.findByTransactionId(transaction_Id)
 				.map(ledgerMapper:: toDto)
@@ -114,10 +116,10 @@ public class LedgerServiceImpl implements LedgerService {
 	}
 
 	@Override
-	public void updateLedgerDepositFailure(TransactionEvent event) {
+	public void updateLedgerDepositFailure(TransactionEvent event) throws StripeException {
 		
 		if(event.getTransactionStatus()!= TransactionStatus.SUCCESS) {
-			throw new IllegalArgumentException("Transactiob not completed yet");
+			throw new IllegalArgumentException("Transaction not completed yet");
 		}
 		
 		if(processedEventRepo.existsById(UUID.fromString((String)event.getEventId()))) {
@@ -129,7 +131,7 @@ public class LedgerServiceImpl implements LedgerService {
 		processedEventRepo.save(processed);
 		
 		UUID userId = UUID.fromString((String)event.getUserKeycloakId());
-		PayoutAccountResponse account = payoutAccountService.getDefaultAccount(userId);
+		PayoutAccountResponse account = payoutAccountService.getStripeStatus(userId);
 
 		LedgerEntry entry = ledgerMapper.toEntityDepositFailure(event,account);
 		ledgerRepo.save(entry);

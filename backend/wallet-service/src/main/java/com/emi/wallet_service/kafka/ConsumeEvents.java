@@ -7,6 +7,7 @@ import com.emi.events.payment.PaymentEvent;
 import com.emi.events.transactions.TransactionEvent;
 import com.emi.wallet_service.service.LedgerService;
 import com.emi.wallet_service.service.WalletService;
+import com.stripe.exception.StripeException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,7 +34,7 @@ public class ConsumeEvents{
 	}
 
 	@KafkaListener(topics="Deposit-ledger-update")
-	public void eventUpdateLedgerDeposit(TransactionEvent depositEvent) {
+	public void eventUpdateLedgerDeposit(TransactionEvent depositEvent) throws StripeException{
 		ledgerService.updateLedgerDeposit(depositEvent);
 		
 	}
@@ -44,7 +45,7 @@ public class ConsumeEvents{
 	}
 
 	@KafkaListener(topics="Deposit-ledger-update-failure")
-	public void eventUpdateLedgerDepositFailure(TransactionEvent depositEvent) {
+	public void eventUpdateLedgerDepositFailure(TransactionEvent depositEvent) throws StripeException{
 		ledgerService.updateLedgerDepositFailure(depositEvent);
 		
 	}

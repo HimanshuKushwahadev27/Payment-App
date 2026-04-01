@@ -36,8 +36,8 @@ public class LedgerMapper {
 	public LedgerEntry toEntityDeposit(TransactionEvent event, PayoutAccountResponse account) {
 		LedgerEntry entry = new LedgerEntry();
 		entry.setTransactionId(UUID.fromString((String)event.getTransactionId()));
-		entry.setToAccountId(account.destinationAccountId());
-		entry.setFromAccountId(SYSTEM_ACC_ID);
+		entry.setToAccountId(SYSTEM_ACC_ID);
+		entry.setFromAccountId(account.stripeAccountId());
 		entry.setEntryType(EntryType.CREDIT);
 		entry.setAmount(BigDecimal.valueOf(event.getAmount()));
 		entry.setCreatedAt(Instant.now());

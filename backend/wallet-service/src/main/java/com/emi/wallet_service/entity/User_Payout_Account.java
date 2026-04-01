@@ -37,7 +37,7 @@ public class User_Payout_Account {
     @Column(name = "charges_enabled")
     private boolean chargesEnabled;
 
-    @Column(name = "payout_enabled")
+    @Column(name = "payouts_enabled")
     private boolean payoutsEnabled;
 
     @Column(name = "details_submitted")

@@ -11,7 +11,7 @@ services:
     restart: on-failure
     environment:
       STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
-      WEBHOOK_SECRET_KEY: ${WEBHOOK_SECRET_KEY}
+      WEBHOOK_SECRET_KEY_PAYMENT: ${WEBHOOK_SECRET_KEY_PAYMENT}
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/paymentservice_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres

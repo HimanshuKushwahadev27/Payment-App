@@ -63,7 +63,7 @@ public class UserPayoutAccountServiceImpl implements UserPayoutAccountService{
     params.put("refresh_url", "http://localhost:4200/reauth");
     params.put("return_url", "http://localhost:4200/success");
     params.put("type", "account_onboarding");
-
+		params.put("return_url", "http://localhost:4200/home/account-profile?fromStripe=true");
 		AccountLink link = AccountLink.create(params);
 
 		return link.getUrl();

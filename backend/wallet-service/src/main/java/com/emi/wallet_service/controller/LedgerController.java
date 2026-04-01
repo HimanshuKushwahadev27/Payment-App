@@ -3,7 +3,8 @@ package com.emi.wallet_service.controller;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,9 +24,9 @@ public class LedgerController {
 	
 	@GetMapping("/{transactionId}")
 	public ResponseEntity<LedgerResponseDto> getUsersRecord(
-			@PathVariable UUID transactionId) {
-		return ResponseEntity.ok(ledgerService.getUsersRecord(transactionId));
-		
+			@PathVariable("transactionId") UUID transactionId,
+			@AuthenticationPrincipal Jwt jwt) {
+		return ResponseEntity.ok(ledgerService.getUsersRecord(transactionId, UUID.fromString(jwt.getSubject())));
 	}
 	
 }
