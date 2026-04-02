@@ -2,60 +2,62 @@
   <div class="profile-container">
     <div class="profile-card">
 
+      @if (!walletService.isWalletContains){
+        {{getAccount()}}
+      }
       @if (walletService.currentWallet()) {
 
-        <div class="profile-header">
 
+        <!-- HEADER -->
+        <div class="profile-header">
           <div class="avatar-wrapper">
             <mat-icon class="wallet-icon">account_balance_wallet</mat-icon>
           </div>
-
           <div class="profile-info">
             <h2 class="name">My Wallet</h2>
             <p class="email">{{ userService.currentUser()?.email }}</p>
-            <div class="meta">
-              <span>💱 {{ walletService.currentWallet()?.currency }}</span>
-              <span>Created {{ walletService.currentWallet()?.createdAt | date:'MMM yyyy' }}</span>
-            </div>
           </div>
-
-          <div class="wallet-section">
-            <div class="wallet-badge">
-              <mat-icon>category</mat-icon>
-              {{ walletService.currentWallet()?.type }}
-            </div>
+          <div class="wallet-badge">
+            <mat-icon class="badge-icon">account_balance</mat-icon>
+            <span>{{ walletService.currentWallet()?.type }}</span>
           </div>
+        </div>  
 
-        </div>
+        <!-- DIVIDER -->
+        <div class="divider"></div>
 
-        <!-- Balance row -->
+        <!-- BALANCE ROW -->
         <div class="balance-row">
-          <span class="balance-label">Available Balance</span>
-          <span class="balance-amount">
-            {{ balance?.balance ?? 0 | currency: walletService.currentWallet()?.currency }}
-          </span>
+          <div class="balance-left">
+            <span class="balance-label">Available Balance</span>
+            <span class="balance-amount">
+              {{ balance?.balance ?? 0 | currency: walletService.currentWallet()?.currency }}
+            </span>
+          </div>
+          <div class="balance-right">
+            <span class="meta-label">Currency</span>
+            <span class="meta-value">{{ walletService.currentWallet()?.currency }}</span>
+            <span class="meta-date">Created {{ walletService.currentWallet()?.createdAt | date:'MMM yyyy' }}</span>
+          </div>
         </div>
 
+        <!-- DIVIDER -->
+        <div class="divider"></div>
+
+        <!-- ACTIONS -->
         <div class="actions">
-          <button mat-raised-button class="pay-btn"
-                  [routerLink]="['/home/transfer']">
+          <button mat-stroked-button class="transfer-btn" [routerLink]="['/home/transfer']">
             <mat-icon>sync_alt</mat-icon>
             Transfer Credits
-          </button>
-          <button mat-raised-button class="edit-btn"
-                  [routerLink]="['/home/wallet-create']">
-            <mat-icon>add</mat-icon>
-            New Wallet
           </button>
         </div>
 
       } @else {
 
         <div class="empty-state">
-          <mat-icon>account_balance_wallet</mat-icon>
-          <p>No wallet found</p>
-          <button mat-raised-button class="edit-btn"
-                  [routerLink]="['/home/wallet-create']">
+          <mat-icon class="empty-icon">account_balance_wallet</mat-icon>
+          <p class="empty-text">No wallet found</p>
+          <button mat-raised-button class="new-wallet-btn" [routerLink]="['/home/wallet-create']">
             <mat-icon>add</mat-icon>
             Create Wallet
           </button>

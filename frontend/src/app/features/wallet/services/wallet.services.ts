@@ -37,10 +37,15 @@ export class WalletServices {
 
   currentWallet = signal<responseWallet | null>(null);
 
+  public isWalletContains = false;
   private http = inject(HttpClient);
 
-  getCurrentBalance(accountId: string): Observable<responseBalance>{
-    return this.http.get<responseBalance>(`/api/wallet/account/${accountId}`);
+  getCurrentBalance(): Observable<responseBalance>{
+    return this.http.get<responseBalance>('/api/wallet/account/');
+  }
+
+  getAccount(): Observable<responseWallet>{
+    return this.http.get<responseWallet>('/api/wallet/account/account');
   }
 
   createWalletAccount(request: createWallet): Observable<responseWallet>{

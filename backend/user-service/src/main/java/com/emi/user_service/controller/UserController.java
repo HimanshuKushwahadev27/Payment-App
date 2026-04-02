@@ -75,14 +75,14 @@ public class UserController {
 
 	
 	@GetMapping("/users/{id}/email")
-	public String getEmail(@PathVariable UUID id) {
+	public String getEmail(@PathVariable("id") UUID id) {
 	    return userService.getEmail(id);
 	}
 
 
 
 	@GetMapping("/stripe-account/{keycloakId}")
-	public ResponseEntity<String> getStripeAccountId(UUID keycloakId) {
+	public ResponseEntity<String> getStripeAccountId(@PathVariable("keycloakId") UUID keycloakId) {
 			return ResponseEntity.ok(userService.getStripeAccountId(keycloakId));
 	}
 }

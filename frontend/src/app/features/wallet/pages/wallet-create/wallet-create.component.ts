@@ -45,12 +45,18 @@ export class WalletCreateComponent {
       const payload: createWallet = this.walletForm.getRawValue();
 
       this.walletService.createWalletAccount(payload).subscribe({
-        next: (wallet) => {
-          this.walletService.currentWallet.set(wallet);
+        next: () => {
+          this.walletService.getAccount().subscribe({
+            next: (wallet) => {
+              this.walletService.currentWallet.set(wallet);
+            }
+          })
+          this.walletService.isWalletContains= true;
           this.toastr.success('Wallet created', 'Success');
           this.router.navigate(['/']);
         },
         error: () => this.toastr.error('Failed to create wallet', 'Error')
       })
   }
+
 }

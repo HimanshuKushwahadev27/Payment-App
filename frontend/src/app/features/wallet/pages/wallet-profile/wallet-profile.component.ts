@@ -25,12 +25,20 @@ export class WalletProfileComponent implements OnInit {
   public userService = inject(UserService);
   
   ngOnInit(): void {
-    const walletId = this.walletService.currentWallet()?.id;
-    if (walletId) {
-      this.walletService.getCurrentBalance(walletId).subscribe({
+      this.walletService.getCurrentBalance().subscribe({
         next: (bal) => this.balance = bal,
         error: () => this.balance = null
       });
+  }
+
+  getAccount(){
+    this.walletService.isWalletContains = true;
+      if(!this.walletService.currentWallet()){
+          this.walletService.getAccount().subscribe({
+              next: (wallet) => {
+               this.walletService.currentWallet.set(wallet);
+       }
+     })
     }
   }
 

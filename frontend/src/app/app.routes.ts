@@ -50,18 +50,18 @@ export const routes: Routes =
 
   { 
     path: 'home/transfer',
-    canActivate: [authGuard, walletGuard],
+    canActivate: [authGuard],
     loadComponent: () => import('./features/wallet/pages/transfer/transfer.component').then(m => m.TransferComponent)
   },
 
   { 
     path: 'home/payout-account',
-    canActivate: [authGuard, walletGuard],
+    canActivate: [authGuard],
     loadComponent: () => import('./features/wallet/pages/payout/payout.component').then(m => m.PayoutComponent)
   },
 
   { 
-    path: 'success',
+    path: 'home/account-profile',
     canActivate: [authGuard, walletGuard],
     loadComponent: () => import('./features/wallet/pages/account-profile/account-profile.component').then(m => m.AccountProfileComponent)
   },

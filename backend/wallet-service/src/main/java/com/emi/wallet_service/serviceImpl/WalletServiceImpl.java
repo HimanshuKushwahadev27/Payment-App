@@ -21,7 +21,6 @@ import com.emi.wallet_service.entity.ProcessedEvents;
 import com.emi.wallet_service.entity.WalletBalance;
 import com.emi.wallet_service.enums.IdempotencyStatus;
 import com.emi.wallet_service.exception.AccountNotExistsException;
-import com.emi.wallet_service.exception.UnauthorizedException;
 import com.emi.wallet_service.exception.WalletNotExistsException;
 import com.emi.wallet_service.mapper.AccountMapper;
 import com.emi.wallet_service.mapper.IdempotencyMapper;
@@ -70,6 +69,9 @@ public class WalletServiceImpl implements WalletService{
 			throw new IllegalStateException("Request already in progress");
 		}
 		
+		if(accountRepo.existsByUserKeycloakId(userKeycloakId)){
+			throw new IllegalArgumentException("Account for the user already exists");
+		}
 		
 		Account account = accountMapper.toEntity(request, userKeycloakId);
 		
@@ -177,17 +179,21 @@ public class WalletServiceImpl implements WalletService{
 	}
 
 	@Override
-	public ReponseBalanceDto getBalance(UUID accountId, UUID userKeycloakId) {
-		Account account = accountRepo.findById(accountId).orElseThrow(() -> new AccountNotExistsException("Not found the account"));
+	public ReponseBalanceDto getBalance( UUID userKeycloakId) {
+		Account account = accountRepo.findByUserKeycloakId(userKeycloakId).orElseThrow(() -> new AccountNotExistsException("Not found the account"));
 		
-		if(!account.getUserKeycloakId().equals(userKeycloakId)) {
-			throw new UnauthorizedException("Not ur wallet");
-		}
 		
-		WalletBalance balance = balanceRepo.findByAccountId(accountId);
+		WalletBalance balance = balanceRepo.findByAccountId(account.getId());
 		
 		return balanceMapper.toDto(balance);
 		
+	}
+
+	@Override
+	public ResponseAccountDto getAccount(UUID userKeycloakId) {
+		return accountRepo.findByUserKeycloakId(userKeycloakId)
+					.map(accountMapper :: toDto)
+					.orElseThrow(() -> new AccountNotExistsException("Not found the account"));
 	}
 
 

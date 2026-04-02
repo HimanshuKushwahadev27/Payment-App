@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -50,12 +49,18 @@ public class WalletController {
 		walletService.transfer(request, UUID.fromString(jwt.getSubject()));
 	}
 
+	@GetMapping("/account")
+	public ResponseEntity<ResponseAccountDto> getAccount(
+		@AuthenticationPrincipal Jwt jwt
+	){
+		return ResponseEntity.ok(walletService.getAccount(UUID.fromString(jwt.getSubject())));
+	}
+
 	
-	@GetMapping("/{accountId}")
+	@GetMapping("/")
 	public ResponseEntity<ReponseBalanceDto> getBalance(
-			@PathVariable("accountId") UUID accountId,
 			@AuthenticationPrincipal Jwt jwt) {
-		return ResponseEntity.ok(walletService.getBalance(accountId, UUID.fromString(jwt.getSubject())));
+		return ResponseEntity.ok(walletService.getBalance( UUID.fromString(jwt.getSubject())));
 		
 	}
 
