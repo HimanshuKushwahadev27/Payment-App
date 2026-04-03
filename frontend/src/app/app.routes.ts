@@ -62,7 +62,7 @@ export const routes: Routes =
 
   { 
     path: 'home/account-profile',
-    canActivate: [authGuard, walletGuard],
+    canActivate: [authGuard],
     loadComponent: () => import('./features/wallet/pages/account-profile/account-profile.component').then(m => m.AccountProfileComponent)
   },
 

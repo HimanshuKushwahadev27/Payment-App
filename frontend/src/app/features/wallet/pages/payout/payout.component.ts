@@ -27,14 +27,22 @@ import { Router } from '@angular/router';
 })
 export class PayoutComponent implements OnInit{
 
+  private router = inject(Router);
+  private payoutService = inject(PayoutService);
+
   ngOnInit(): void {
+    this.payoutService.getStatus().subscribe({
+      next: (wallet) => {
+        this.payoutService.currentPayoutAccount.set(wallet);
+      } 
+    })
+
     if (this.payoutService.currentPayoutAccount()) {
       this.goToProfile();
     }
   }
 
-  private router = inject(Router);
-  private payoutService = inject(PayoutService);
+
 
   private toastr = inject(ToastrService);
 
