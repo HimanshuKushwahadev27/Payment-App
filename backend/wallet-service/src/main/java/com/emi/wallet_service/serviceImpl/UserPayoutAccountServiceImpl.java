@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
+import com.google.gson.JsonParser;
 import com.emi.wallet_service.ResponseDto.PayoutAccountResponse;
 import com.emi.wallet_service.client.UserClient;
 import com.emi.wallet_service.entity.User_Payout_Account;
@@ -15,6 +15,7 @@ import com.emi.wallet_service.mapper.UserPayoutMapper;
 import com.emi.wallet_service.repositories.UserPayoutRepo;
 import com.emi.wallet_service.service.UserPayoutAccountService;
 import com.stripe.Stripe;
+import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Account;
 import com.stripe.model.AccountLink;
@@ -25,7 +26,9 @@ import com.stripe.model.ExternalAccountCollection;
 import com.stripe.net.Webhook;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserPayoutAccountServiceImpl implements UserPayoutAccountService{
@@ -73,35 +76,44 @@ public class UserPayoutAccountServiceImpl implements UserPayoutAccountService{
 
 	@Override
 	public String handleWebhook(String payload, String header) {
-	  try {
-        Event event = Webhook.constructEvent(payload, header, webhookSecretKey);
+			try {
+					Event event = Webhook.constructEvent(payload, header, webhookSecretKey);
 
-        if ("account.updated".equals(event.getType())) {
+					if ("account.updated".equals(event.getType())) {
+							String accountId = JsonParser.parseString(
+														event.getDataObjectDeserializer().getRawJson()
+												)
+												.getAsJsonObject()
+												.get("id")
+												.getAsString();
 
-            Account account = (Account) event.getDataObjectDeserializer()
-                    .getObject()
-                    .orElseThrow();
+							log.info("account.updated webhook for accountId: {}", accountId);
 
-            String accountId = account.getId();
-						
-						User_Payout_Account payout  = payoutRepo
-								.findByStripeAccountId(accountId)
-								.orElseThrow(() -> new RuntimeException("User not found"));
+							Account account = Account.retrieve(accountId);
 
-						payout.setPayoutsEnabled(account.getPayoutsEnabled());
-						payout.setChargesEnabled(account.getChargesEnabled());
-						payout.setDetailsSubmitted(account.getDetailsSubmitted());
-						payout.setUpdatedAt(Instant.now());
+							User_Payout_Account payout = payoutRepo
+									.findByStripeAccountId(accountId)
+									.orElseThrow(() -> new RuntimeException("Payout account not found: " + accountId));
 
-						payoutRepo.save(payout);
-        }
+							payout.setPayoutsEnabled(Boolean.TRUE.equals(account.getPayoutsEnabled()));
+							payout.setChargesEnabled(Boolean.TRUE.equals(account.getChargesEnabled()));
+							payout.setDetailsSubmitted(Boolean.TRUE.equals(account.getDetailsSubmitted()));
+							payout.setUpdatedAt(Instant.now());
 
-        return "";
+							payoutRepo.save(payout);
+							log.info("Payout account updated: payouts={}, charges={}, details={}", 
+									payout.isPayoutsEnabled(), payout.isChargesEnabled(), payout.isDetailsSubmitted());
+					}
 
-    } catch (Exception e) {
-        e.printStackTrace();
-    		throw new RuntimeException("Failed to fetch webhook details", e);
-    }
+					return "";
+
+			} catch (SignatureVerificationException e) {
+					log.error("Invalid Stripe webhook signature", e);
+					throw new RuntimeException("Invalid webhook signature", e);
+			} catch (Exception e) {
+					log.error("Webhook processing failed", e);
+					throw new RuntimeException("Webhook processing failed", e);
+			}
 	}
 
 
@@ -112,6 +124,7 @@ public class UserPayoutAccountServiceImpl implements UserPayoutAccountService{
 		
 		try{
 			Stripe.apiKey = stripeSecretKey;
+			
 			Account account = Account.retrieve(userAccount.getStripeAccountId());
 			ExternalAccountCollection externalAccounts = account.getExternalAccounts();
 

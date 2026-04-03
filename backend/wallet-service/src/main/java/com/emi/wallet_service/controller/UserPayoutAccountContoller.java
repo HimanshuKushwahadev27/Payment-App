@@ -16,8 +16,11 @@ import com.emi.wallet_service.ResponseDto.PayoutAccountResponse;
 import com.emi.wallet_service.service.UserPayoutAccountService;
 import com.stripe.exception.StripeException;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/wallet/stored_accounts")
 @RequiredArgsConstructor
@@ -38,7 +41,11 @@ public class UserPayoutAccountContoller {
     @PostMapping("/webhook")
     public ResponseEntity<Void> webhook(
             @RequestBody String payload,
-            @RequestHeader("Stripe-Signature") String sigHeader) {
+            @RequestHeader("Stripe-Signature") String sigHeader,
+            HttpServletRequest request) {
+
+      log.info("Webhook hit at path: {}", request.getRequestURI());
+
       accountService.handleWebhook(payload, sigHeader);
         return ResponseEntity.ok().build();
     }

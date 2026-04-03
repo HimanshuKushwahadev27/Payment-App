@@ -15,7 +15,7 @@ public class SecConfiguration {
 		return http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/public/**").permitAll()
+                    .requestMatchers("/api/wallet/stored_accounts/webhook").permitAll()
                     .anyRequest().authenticated()
 			)
 			.oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()))

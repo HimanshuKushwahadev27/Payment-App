@@ -22,10 +22,13 @@ public class IdempotencyKeyFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-
+        String path = exchange.getRequest().getURI().getPath();
         String idempotencyKey =
                 exchange.getRequest().getHeaders().getFirst(IDEMPOTENCY_HEADER);
 
+        if (path.contains("/webhook")) {
+            return chain.filter(exchange);
+        }
         if (exchange.getRequest().getMethod() == HttpMethod.POST) {
 
             if (idempotencyKey == null || idempotencyKey.isBlank()) {
