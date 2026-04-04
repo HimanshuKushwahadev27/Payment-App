@@ -6,4 +6,6 @@ import { Component } from '@angular/core';
   templateUrl: './transaction-view.component.html',
   styleUrl: './transaction-view.component.scss',
 })
-export class TransactionViewComponent {}
+export class TransactionViewComponent {
+  
+}

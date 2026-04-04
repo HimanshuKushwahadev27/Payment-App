@@ -48,10 +48,10 @@ public class TransactionController {
 		return ResponseEntity.ok(transactionService.getAll(UUID.fromString(jwt.getSubject())));
 	}
 	
-	@GetMapping("/get")
+	@GetMapping("/get/{transactionId}")
 	public ResponseEntity<TransactionResponseDto> get(
 			@AuthenticationPrincipal Jwt jwt,
-			@PathVariable UUID transactionId){
+			@PathVariable("transactionId") UUID transactionId){
 		return ResponseEntity.ok(transactionService.get(
 				UUID.fromString(jwt.getSubject()),
 				transactionId));

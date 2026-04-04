@@ -65,5 +65,14 @@ export const routes: Routes =
     canActivate: [authGuard],
     loadComponent: () => import('./features/wallet/pages/account-profile/account-profile.component').then(m => m.AccountProfileComponent)
   },
-
+  { 
+    path: 'home/ledger',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/wallet/pages/ledger/ledger.component').then(m => m.LedgerComponent)
+  },
+  { 
+    path: 'home/withdraw',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/transaction/pages/withdraw/withdraw.component').then(m => m.WithdrawComponent)
+  },
 ];

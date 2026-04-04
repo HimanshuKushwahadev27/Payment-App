@@ -36,8 +36,10 @@ public class StripeGateway implements PaymentGateway {
 		
 		body.add("amount", request.amount().multiply(BigDecimal.valueOf(100)).toString());
     body.add("payment_method_types[]", "card");
-    body.add("payment_method_types[]", "upi");
+    body.add("payment_method_types[]", "us_bank_account");
 		body.add("currency", request.currency().toLowerCase());
+    body.add("payment_method_options[us_bank_account][financial_connections][permissions][]", "payment");
+    body.add("mandate_data[customer_acceptance][type]", "online");
 
 		StripeResponse response = stripeWebClient.post()
 				.uri("/v1/payment_intents")

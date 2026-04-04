@@ -55,4 +55,8 @@ export class WalletServices {
   transferAmount(request: transferAmountDto){
     return this.http.post('/api/wallet/account/transfer', request);
   }
+
+  ledger(){
+    
+  }
 }
