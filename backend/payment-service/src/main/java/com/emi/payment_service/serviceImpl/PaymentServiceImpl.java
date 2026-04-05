@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.stereotype.Service;
 
 import com.emi.events.payment.PaymentStatus;
@@ -13,9 +14,12 @@ import com.emi.payment_service.RequestDtos.GatewayPayoutRequest;
 import com.emi.payment_service.RequestDtos.RequestPaymentDto;
 import com.emi.payment_service.RequestDtos.RequestWithdrawDto;
 import com.emi.payment_service.ResponseDtos.GatewayResponse;
+import com.emi.payment_service.ResponseDtos.ResponseBalanceDto;
+import com.emi.payment_service.client.WalletClient;
 import com.emi.payment_service.entity.IdempotencyRecord;
 import com.emi.payment_service.entity.Payments;
 import com.emi.payment_service.enums.IdempotencyStatus;
+import com.emi.payment_service.exception.InsufficientBalanceException;
 import com.emi.payment_service.gatewayPayment.PaymentGateway;
 import com.emi.payment_service.kafka.PaymentEventGeneration;
 import com.emi.payment_service.mapper.EventMapper;
@@ -51,7 +55,8 @@ public class PaymentServiceImpl implements PaymentService {
 	private final PaymentMapper paymentMapper;
 	private final GatewayMapper gatewayMapper;
 	private final PaymentEventGeneration eventGeneration;
-	
+	private final WalletClient walletClient;
+
 	@Override
 	public String createIntent(RequestPaymentDto request, UUID idempotencyKey, UUID keycloakId) {
 		IdempotencyRecord idempotency = idempMapper.getEntity(request, idempotencyKey, keycloakId);
@@ -93,7 +98,12 @@ public class PaymentServiceImpl implements PaymentService {
 		Payments payment = paymentMapper.toEntityWithdraw(request, keycloakId);
 		paymentRepo.save(payment);	
 		
+		ResponseBalanceDto balanceDto = walletClient.getBalance();
 		
+		if(balanceDto.balance().compareTo(request.amount())> 0){
+			throw new InsufficientBalanceException("Withdrawal amount exceeds wallet balance. Available: " + balanceDto.balance());
+		}
+
 		GatewayPayoutRequest gatewayRequest = gatewayMapper.getRequestPayout(payment, idempotencyKey, request.destinationAccountId());
 		GatewayResponse gatewayResponse = paymentGateway.payout(gatewayRequest, keycloakId);
 		

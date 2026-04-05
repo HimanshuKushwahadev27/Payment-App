@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PaymentController {
 	
-	 private final PaymentService paymentService;
+	private final PaymentService paymentService;
 	
 	@PostMapping("/charge")
 	public ResponseEntity<Map<String, String>> charge(

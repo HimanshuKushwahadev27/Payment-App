@@ -58,9 +58,9 @@ public class WalletController {
 
 	
 	@GetMapping("/")
-	public ResponseEntity<ReponseBalanceDto> getBalance(
+	public ReponseBalanceDto getBalance(
 			@AuthenticationPrincipal Jwt jwt) {
-		return ResponseEntity.ok(walletService.getBalance( UUID.fromString(jwt.getSubject())));
+		return walletService.getBalance( UUID.fromString(jwt.getSubject()));
 		
 	}
 
