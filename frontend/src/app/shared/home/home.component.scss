@@ -1,0 +1,26 @@
+
+button.mat-mdc-raised-button.nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  
+  height: 40px;
+  padding: 0 14px;
+
+  color: #9c27b0;                      
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.nav-btn:hover {
+  background-color: rgba(156, 39, 176, 0.12);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 90px;
+  flex-wrap: nowrap;
+  margin-right: 20px;   
+}

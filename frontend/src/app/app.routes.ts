@@ -75,4 +75,9 @@ export const routes: Routes =
     canActivate: [authGuard],
     loadComponent: () => import('./features/transaction/pages/withdraw/withdraw.component').then(m => m.WithdrawComponent)
   },
+  { 
+    path: 'home/deposit',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/payment/pages/charge/charge.component').then(m => m.ChargeComponent)
+  },
 ];

@@ -1,0 +1,378 @@
+.charge-page {
+  display: flex;
+  justify-content: center;
+  padding: 32px 16px;
+  min-height: 100vh;
+  background: #f9f6ff;
+}
+
+// ── main card ────────────────────────────────────────────────────────────────
+.charge-card {
+  width: 100%;
+  max-width: 480px;
+  height: fit-content;
+  border-radius: 20px !important;
+  padding: 28px;
+  background: linear-gradient(135deg, #f5f0ff, #fdfcff) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05) !important;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+// ── header ───────────────────────────────────────────────────────────────────
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  button[mat-icon-button] {
+    color: #6b21a8;
+  }
+
+  .header-text {
+    h2 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 600;
+      color: #2d2d2d;
+    }
+
+    p {
+      margin: 2px 0 0;
+      font-size: 13px;
+      color: #888;
+    }
+  }
+}
+
+// ── amount hero ───────────────────────────────────────────────────────────────
+.amount-hero {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+  padding: 12px 0 4px;
+
+  .currency-symbol {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #8e2de2;
+    line-height: 1;
+  }
+
+  .amount-input {
+    background: none;
+    border: none;
+    outline: none;
+    font-size: 4rem;
+    font-weight: 700;
+    color: #2d2d2d;
+    width: 180px;
+    text-align: center;
+    caret-color: #8e2de2;
+
+    &::placeholder {
+      color: #ddd;
+    }
+
+    // hide number spinners
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+    }
+  }
+}
+
+.amount-hint {
+  margin: 0;
+  text-align: center;
+  font-size: 12px;
+  color: #aaa;
+  letter-spacing: 0.03em;
+}
+
+// ── quick chips ───────────────────────────────────────────────────────────────
+.quick-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+
+  button[mat-stroked-button] {
+    flex: 1;
+    min-width: 60px;
+    border-radius: 30px !important;
+    border-color: rgba(142, 45, 226, 0.3);
+    color: #6b21a8;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s;
+
+    &:hover {
+      background: rgba(142, 45, 226, 0.06);
+      border-color: #8e2de2;
+    }
+
+    &.selected-chip {
+      background: linear-gradient(135deg, #8e2de2, #4a00e0);
+      color: white;
+      border-color: transparent;
+    }
+  }
+}
+
+// ── section label ─────────────────────────────────────────────────────────────
+.section-label {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #9c27b0;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+// ── method grid ───────────────────────────────────────────────────────────────
+.method-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.method-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 12px;
+  border-radius: 16px;
+  border: 1.5px solid rgba(142, 45, 226, 0.15);
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: rgba(142, 45, 226, 0.4);
+    box-shadow: 0 4px 12px rgba(142, 45, 226, 0.08);
+  }
+
+  &.selected {
+    border-color: #8e2de2;
+    background: linear-gradient(135deg, #f5f0ff, #fdfcff);
+    box-shadow: 0 4px 16px rgba(142, 45, 226, 0.15);
+  }
+
+  .method-icon-wrap {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8e2de2, #4a00e0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    mat-icon {
+      color: white;
+      font-size: 22px;
+    }
+  }
+
+  .method-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #555;
+    text-align: center;
+  }
+
+  .check-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 18px;
+    color: #8e2de2;
+  }
+}
+
+// ── order summary ─────────────────────────────────────────────────────────────
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(142, 45, 226, 0.08);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .summary-key {
+    font-size: 13px;
+    color: #888;
+    font-weight: 500;
+  }
+
+  .summary-val {
+    font-size: 14px;
+    color: #2d2d2d;
+    font-weight: 500;
+
+    &.highlight {
+      font-size: 18px;
+      font-weight: 700;
+      color: #8e2de2;
+    }
+  }
+}
+
+// ── stripe mount ──────────────────────────────────────────────────────────────
+.stripe-mount-wrap {
+  background: white;
+  border-radius: 14px;
+  border: 1px solid rgba(142, 45, 226, 0.15);
+  padding: 16px;
+  min-height: 200px;
+}
+
+// ── ACH note ─────────────────────────────────────────────────────────────────
+.ach-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 12px 14px;
+  background: #fff4e5;
+  border-radius: 10px;
+  font-size: 13px;
+  color: #d97706;
+  line-height: 1.5;
+
+  mat-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+}
+
+// ── error ─────────────────────────────────────────────────────────────────────
+.error-msg {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 10px 14px;
+  background: #fdecea;
+  border-radius: 10px;
+  font-size: 13px;
+  color: #dc2626;
+
+  mat-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+}
+
+// ── buttons ───────────────────────────────────────────────────────────────────
+.btn-primary {
+  width: 100%;
+  height: 48px !important;
+  border-radius: 30px !important;
+  background: linear-gradient(135deg, #8e2de2, #4a00e0) !important;
+  color: white !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  &:disabled {
+    background: #e0e0e0 !important;
+    color: #aaa !important;
+  }
+
+  mat-icon {
+    font-size: 20px;
+  }
+
+  mat-spinner {
+    ::ng-deep circle {
+      stroke: white;
+    }
+  }
+}
+
+.btn-secondary {
+  width: 100%;
+  height: 44px !important;
+  border-radius: 30px !important;
+  border-color: rgba(142, 45, 226, 0.3) !important;
+  color: #6b21a8 !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+
+  &:hover {
+    background: rgba(142, 45, 226, 0.05) !important;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+  }
+}
+
+// ── terminal states ───────────────────────────────────────────────────────────
+.terminal-card {
+  text-align: center;
+  align-items: center;
+  padding: 40px 28px !important;
+}
+
+.terminal-icon-wrap {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+
+  mat-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+  }
+
+  &.success {
+    background: #e6f7ec;
+    mat-icon { color: #1f9d55; }
+  }
+
+  &.processing {
+    background: #fff4e5;
+    mat-icon { color: #d97706; }
+  }
+
+  &.failed {
+    background: #fdecea;
+    mat-icon { color: #dc2626; }
+  }
+}
+
+.terminal-title {
+  margin: 0 0 8px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #2d2d2d;
+}
+
+.terminal-sub {
+  margin: 0 0 24px;
+  font-size: 14px;
+  color: #666;
+  line-height: 1.7;
+}

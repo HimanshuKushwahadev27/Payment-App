@@ -1,1 +1,203 @@
-<p>charge works!</p>
+<div class="charge-page">
+
+  <!-- ── STEP: AMOUNT ── -->
+  <mat-card class="charge-card" *ngIf="step() === 'amount'">
+
+    <div class="card-header">
+      <button mat-icon-button (click)="router.navigate(['/wallet'])">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div class="header-text">
+        <h2>Add Funds</h2>
+        <p>Secure payment via Stripe</p>
+      </div>
+    </div>
+
+    <mat-divider />
+
+    <div class="amount-hero">
+      <span class="currency-symbol">$</span>
+      <input
+        class="amount-input"
+        type="number"
+        [formControl]="$any(amountForm.get('amount'))"
+        placeholder="0"
+        min="1"
+        (input)="clearQuick()"
+      />
+    </div>
+    <p class="amount-hint">Minimum $1.00 · USD only</p>
+
+    <!-- quick chips -->
+    <div class="quick-chips">
+      <button
+        mat-stroked-button
+        *ngFor="let q of quickAmounts"
+        [class.selected-chip]="selectedQuick === q"
+        (click)="setQuick(q)"
+      >
+        ${{ q }}
+      </button>
+    </div>
+
+    <mat-divider />
+
+    <!-- method selector -->
+    <p class="section-label">Payment Method</p>
+    <div class="method-grid">
+      <div
+        class="method-card"
+        *ngFor="let m of methods"
+        [class.selected]="selectedMethod === m.value"
+        (click)="selectedMethod = m.value"
+      >
+        <div class="method-icon-wrap">
+          <mat-icon>{{ m.icon }}</mat-icon>
+        </div>
+        <span class="method-label">{{ m.label }}</span>
+        <mat-icon class="check-icon" *ngIf="selectedMethod === m.value">check_circle</mat-icon>
+      </div>
+    </div>
+
+    <p class="error-msg" *ngIf="errorMsg()">
+      <mat-icon>error_outline</mat-icon> {{ errorMsg() }}
+    </p>
+
+    <button
+      mat-flat-button
+      class="btn-primary"
+      [disabled]="amountForm.invalid || loading()"
+      (click)="initiateIntent()"
+    >
+      <mat-spinner diameter="18" *ngIf="loading()" />
+      <span *ngIf="!loading()">Continue</span>
+      <mat-icon *ngIf="!loading()">arrow_forward</mat-icon>
+    </button>
+
+  </mat-card>
+
+
+  <!-- ── STEP: PAYMENT ELEMENT ── -->
+  <mat-card class="charge-card" *ngIf="step() === 'payment'">
+
+    <div class="card-header">
+      <button mat-icon-button [disabled]="loading()" (click)="backToAmount()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div class="header-text">
+        <h2>Payment Details</h2>
+        <p>{{ selectedMethodLabel }}</p>
+      </div>
+    </div>
+
+    <mat-divider />
+
+    <!-- order summary -->
+    <div class="summary">
+      <div class="summary-row">
+        <span class="summary-key">Amount</span>
+        <span class="summary-val highlight">${{ amountForm.get('amount')?.value }}</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-key">Currency</span>
+        <span class="summary-val">USD</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-key">Method</span>
+        <span class="summary-val">{{ selectedMethodLabel }}</span>
+      </div>
+    </div>
+
+    <mat-divider />
+
+    <!-- stripe mounts here -->
+    <div class="stripe-mount-wrap">
+      <div id="payment-element"></div>
+    </div>
+
+    <p class="ach-note" *ngIf="selectedMethod === 'BANK_ACCOUNT'">
+      <mat-icon>info_outline</mat-icon>
+      ACH bank transfers take 3–5 business days. Your wallet will be credited once confirmed.
+    </p>
+
+    <p class="error-msg" *ngIf="errorMsg()">
+      <mat-icon>error_outline</mat-icon> {{ errorMsg() }}
+    </p>
+
+    <button
+      mat-flat-button
+      class="btn-primary"
+      [disabled]="loading()"
+      (click)="confirmPayment()"
+    >
+      <mat-spinner diameter="18" *ngIf="loading()" />
+      <span *ngIf="!loading()">Pay ${{ amountForm.get('amount')?.value }}</span>
+      <mat-icon *ngIf="!loading()">lock</mat-icon>
+    </button>
+
+    <button
+      mat-stroked-button
+      class="btn-secondary"
+      [disabled]="loading()"
+      (click)="backToAmount()"
+    >
+      Change Amount
+    </button>
+
+  </mat-card>
+
+
+  <!-- ── STEP: SUCCESS ── -->
+  <mat-card class="charge-card terminal-card" *ngIf="step() === 'success'">
+    <div class="terminal-icon-wrap success">
+      <mat-icon>check_circle</mat-icon>
+    </div>
+    <h2 class="terminal-title">Payment Successful</h2>
+    <p class="terminal-sub">
+      ${{ amountForm.get('amount')?.value }} has been added to your wallet balance.
+    </p>
+    <button mat-flat-button class="btn-primary" (click)="router.navigate(['/wallet'])">
+      Back to Wallet
+      <mat-icon>account_balance_wallet</mat-icon>
+    </button>
+  </mat-card>
+
+
+  <!-- ── STEP: PROCESSING (ACH) ── -->
+  <mat-card class="charge-card terminal-card" *ngIf="step() === 'processing'">
+    <div class="terminal-icon-wrap processing">
+      <mat-icon>schedule</mat-icon>
+    </div>
+    <h2 class="terminal-title">Transfer Initiated</h2>
+    <p class="terminal-sub">
+      Your ACH bank transfer is being processed.<br />
+      Funds typically arrive in 3–5 business days.<br />
+      You'll be notified once your wallet is credited.
+    </p>
+    <button mat-flat-button class="btn-primary" (click)="router.navigate(['/wallet'])">
+      Got It
+      <mat-icon>thumb_up</mat-icon>
+    </button>
+  </mat-card>
+
+
+  <!-- ── STEP: FAILED ── -->
+  <mat-card class="charge-card terminal-card" *ngIf="step() === 'failed'">
+    <div class="terminal-icon-wrap failed">
+      <mat-icon>cancel</mat-icon>
+    </div>
+    <h2 class="terminal-title">Payment Failed</h2>
+    <p class="terminal-sub">
+      Your payment could not be processed.<br />
+      Please try a different method.
+    </p>
+    <button mat-flat-button class="btn-primary" (click)="resetAll()">
+      Try Again
+      <mat-icon>refresh</mat-icon>
+    </button>
+    <button mat-stroked-button class="btn-secondary" (click)="router.navigate(['/wallet'])">
+      Cancel
+    </button>
+  </mat-card>
+
+</div>

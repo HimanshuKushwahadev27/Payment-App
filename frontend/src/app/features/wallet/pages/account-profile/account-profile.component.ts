@@ -1,7 +1,7 @@
 import { Component, computed, inject, OnInit } from '@angular/core';
 import { PayoutService } from '../../services/payout.service';
 import { ToastrService } from 'ngx-toastr';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { DatePipe, NgClass } from '@angular/common';
@@ -14,6 +14,7 @@ import { DatePipe, NgClass } from '@angular/common';
     MatButtonModule,
     NgClass,
     DatePipe,
+    RouterLink
   ],
   templateUrl: './account-profile.component.html',
   styleUrl: './account-profile.component.scss',

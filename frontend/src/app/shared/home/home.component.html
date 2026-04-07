@@ -1,0 +1,18 @@
+@if (authService.isAuthenticated()) {
+<div class="nav-actions">
+  <button mat-button class="nav-btn" [routerLink]="['/home/transfer']" >
+      <mat-icon>sync_alt</mat-icon>
+    <span>Transfer Credits</span>
+  </button>
+
+  <button mat-button class="nav-btn" [routerLink]="['/home/payout-account']" >
+      <mat-icon>account_balance</mat-icon>
+    <span>Payout</span>
+  </button>
+  
+  <button mat-button class="nav-btn" [routerLink]="['/home/deposit']" >
+    <mat-icon>add_circle</mat-icon>
+    <span>Payout</span>
+  </button>
+</div>
+}
