@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.stereotype.Service;
 
 import com.emi.events.payment.PaymentStatus;
@@ -100,7 +99,7 @@ public class PaymentServiceImpl implements PaymentService {
 		
 		ResponseBalanceDto balanceDto = walletClient.getBalance();
 		
-		if(balanceDto.balance().compareTo(request.amount())> 0){
+		if(request.amount().compareTo(balanceDto.balance())> 0){
 			throw new InsufficientBalanceException("Withdrawal amount exceeds wallet balance. Available: " + balanceDto.balance());
 		}
 
