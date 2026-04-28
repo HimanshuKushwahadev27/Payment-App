@@ -20,9 +20,9 @@ Client (Web / Mobile)
 -------------------------------------------------
 |               Microservices Layer             |
 -------------------------------------------------
-| user-service        wallet-service           |
-| payment-service     transaction-service      |
-| notification-service                        |
+| user-service        wallet-service            |
+| payment-service     transaction-service       |
+| notification-service                          |
 -------------------------------------------------
         │
         ▼
@@ -181,6 +181,8 @@ This ensures:
 ##  KYC & Document Verification
 
 This system includes a **KYC (Know Your Customer)** module to verify user identity, similar to real fintech platforms.
+
+This can be removed later as the stripe itself does the kyc verification when the user adds his/her bank account
 
 ---
 
